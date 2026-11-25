@@ -163,7 +163,7 @@
         <button id="backBottom" class="secondary full" type="button">Retour aux services</button>
       </section>
     </main>
-    <footer>Bureau des Noëls · BN-2026-F024 · J24<br>Prototype de l'interface — Aucun autre épisode modifié</footer>
+    <footer>Bureau des Noëls · Service des archives · J24<br>Prototype de l'interface — Aucun autre épisode modifié</footer>
   </div>
 
   <div id="resetDialog" class="modal-backdrop" hidden>
@@ -237,7 +237,7 @@
     function showScreen(name){
       currentScreen=name;
       SCREENS.forEach(id=>$(id).hidden=(id!==name));
-      window.scrollTo({top:0,behavior:"instant"});
+      window.scrollTo({top:0,behavior:"auto"});
       if(name==="screenDashboard" || name==="screenResume")updateProgress();
       if(name==="screenLogin"){$("suffix").value="";$("loginError").textContent="";$("loginHint").hidden=true;$("hintButton").setAttribute("aria-expanded","false");}
     }
