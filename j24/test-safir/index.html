@@ -59,6 +59,46 @@
     .error{color:var(--error)}
     @media(max-width:600px){body{padding:8px 5px 25px}.shell{border-radius:12px}.body{padding:11px 9px 15px}header{padding:12px 13px}.toast{min-height:100px;padding:10px}.controls{gap:10px}.rightmeta{text-align:left}.modal-body{padding:8px}.modal-header h2{font-size:18px}.scene-wrap{border-radius:6px}.hotspot{border-radius:7px}}
     @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+    /* Interactions visibles et transitions cinématiques — version test 2 */
+    .scene-wrap{isolation:isolate;overflow:hidden}
+    #sceneImage{position:relative;z-index:0}
+    #sceneWindowOverlay,#sceneFullOverlay{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none;-webkit-user-drag:none}
+    #sceneWindowOverlay{z-index:1;clip-path:ellipse(20% 40% at 59% 27%);-webkit-mask-image:radial-gradient(ellipse 20% 40% at 59% 27%,#000 49%,transparent 98%);mask-image:radial-gradient(ellipse 20% 40% at 59% 27%,#000 49%,transparent 98%);opacity:0;transition:opacity 1.1s ease}
+    #sceneWindowOverlay.opening{opacity:1}
+    #sceneFullOverlay{z-index:2;opacity:0;transition:opacity .72s ease-in-out}
+    #sceneFullOverlay.fade-in{opacity:1}
+    #sceneFlash{position:absolute;inset:0;z-index:4;pointer-events:none;background:radial-gradient(ellipse at 60% 35%,rgba(253,234,160,.62),transparent 58%);opacity:0;transition:opacity .5s ease}
+    #sceneFlash.active{opacity:1}
+    .hotspot{z-index:6;cursor:pointer;transition:background .18s ease,border-color .18s ease,box-shadow .18s ease}
+    .hotspot.pressed{border:2px solid rgba(255,230,151,.9);background:rgba(255,230,151,.17);box-shadow:0 0 20px #f7dc9166}
+    .hotspot.drop-target{border:3px solid #e8ce93;background:rgba(236,212,142,.22);box-shadow:inset 0 0 18px #f4d29366}
+    .scene-wrap.busy .hotspot{pointer-events:none}
+    #sceneBubble{z-index:8;position:absolute;left:3%;right:3%;bottom:4%;border:1px solid #ecd7a2;background:rgba(16,30,23,.95);border-radius:11px;padding:10px 12px;line-height:1.35;color:#fff4d6;font-size:clamp(12px,2.1vw,15px);box-shadow:0 6px 24px #000b;pointer-events:none;opacity:0;transform:translateY(12px);transition:opacity .24s ease,transform .24s ease}
+    #sceneBubble.visible{opacity:1;transform:translateY(0)}
+    #sceneBubble .bubble-label{display:block;color:#e3c991;text-transform:uppercase;letter-spacing:.08em;font-weight:800;font-size:10px;margin-bottom:3px}
+    #tapRipple{position:absolute;z-index:7;border:2px solid #ffdfa2;border-radius:50%;width:14px;height:14px;margin:-7px;pointer-events:none;opacity:0;transform:scale(.6)}
+    #tapRipple.play{animation:tap-ripple .55s ease-out both}
+    @keyframes tap-ripple{from{opacity:1;transform:scale(.5)}to{opacity:0;transform:scale(4)}}
+    .scene-wrap.lamp-dim #sceneImage,.scene-wrap.lamp-dim #sceneFullOverlay{filter:brightness(.64) saturate(.85)}
+    .scene-wrap.lamp-dim #sceneFlash{opacity:0}
+    .item{touch-action:none;user-select:none;-webkit-user-select:none;transition:transform .17s ease,background .17s ease}
+    .item:active{transform:scale(.96)}
+    .item.new-item{animation:item-arrive .6s cubic-bezier(.2,1.3,.3,1)}
+    @keyframes item-arrive{0%{transform:translateY(-13px) scale(.8);opacity:.2}100%{transform:translateY(0) scale(1);opacity:1}}
+    .drag-ghost{position:fixed;z-index:300;pointer-events:none;transform:translate(-50%,-55%);padding:11px 15px;border:2px solid #f1d89d;border-radius:12px;background:#1f3829ed;color:#fff1d2;box-shadow:0 10px 30px #000a;font-size:17px;font-weight:800;white-space:nowrap}
+    .drag-source{opacity:.55}
+    .inventory-items .item[aria-pressed=true]:after{content:' • en main';font-size:11px;font-weight:500}
+    .instructions{display:flex;align-items:flex-start;gap:8px;background:#293d2d;border:1px solid #566e52;border-radius:8px;padding:10px 11px;margin:0 0 10px;font-size:13px;color:#e5e3d5}
+    .instructions .hand{font-size:20px;line-height:1.2}
+    .focus-pulse{animation:focus-pulse .62s ease-out}
+    @keyframes focus-pulse{50%{filter:brightness(1.13) saturate(1.1)}}
+    .modal-untie{animation:untie .65s ease-in-out}
+    @keyframes untie{50%{filter:brightness(1.35);transform:scale(1.03)}100%{opacity:.15;transform:scale(.95)}}
+    .toast{min-height:75px}
+    .btn[aria-pressed=true]{background:#e6c990;color:#1b2c21}
+    @media(max-width:600px){#sceneBubble{font-size:12px;padding:8px 10px;bottom:2%}.instructions{padding:8px;margin-bottom:8px}.toast{min-height:72px}}
+    @media(prefers-reduced-motion:reduce){#shuttersVfx .shutter,#sceneFullOverlay,#sceneBubble{transition:none!important}.drag-ghost{transition:none!important}}
   </style>
 </head>
 <body>
@@ -69,8 +109,14 @@
     </header>
     <div class="body">
       <p class="intro">Un occupant non habilité s'est installé sur une pièce du dossier. Le Bureau sollicite votre assistance.</p>
+      <div class="instructions"><span class="hand" aria-hidden="true">☝</span><span>Explore les objets en les touchant. Tu peux aussi <strong>déplacer les objets que tu récupères</strong> vers la scène, ou les sélectionner puis toucher leur destination.</span></div>
       <div class="scene-wrap" id="sceneWrap">
         <img id="sceneImage" src="assets/safir-bureau-ferme.webp" width="1536" height="864" alt="Bureau de Noël : Safir est couché sur une grande enveloppe, près d'une fenêtre aux volets fermés et d'un arbre à chat.">
+        <img id="sceneWindowOverlay" src="assets/safir-bureau-ouvert.webp" alt="" hidden>
+        <img id="sceneFullOverlay" alt="" hidden>
+        <div id="sceneFlash" aria-hidden="true"></div>
+        <div id="tapRipple" aria-hidden="true"></div>
+        <div id="sceneBubble" aria-hidden="true"></div>
         <button class="hotspot" data-object="window" aria-label="Examiner la fenêtre" style="left:46%;top:1%;width:27%;height:53%"></button>
         <button class="hotspot" data-object="cat" aria-label="Examiner Safir" style="left:19%;top:42%;width:46%;height:35%"></button>
         <button class="hotspot" data-object="envelope" aria-label="Examiner l'enveloppe confidentielle" style="left:36%;top:68%;width:30%;height:19%"></button>
@@ -85,7 +131,7 @@
         <div class="controls-right"><button id="resetButton" class="btn alt small" type="button">↺ Recommencer</button></div>
       </div>
       <div id="hintText" class="hint" hidden aria-live="polite"></div>
-      <div class="inventory"><h3>Inventaire</h3><div id="inventoryItems" class="inventory-items"><span class="muted small">Vide pour l'instant.</span></div><p id="inventoryHelp" class="inv-help" hidden>Un objet sélectionné peut servir dans la scène. Touchez une zone pour l'utiliser.</p></div>
+      <div class="inventory"><h3>Inventaire</h3><div id="inventoryItems" class="inventory-items"><span class="muted small">Vide pour l'instant.</span></div><p id="inventoryHelp" class="inv-help" hidden>Pour utiliser un objet : touche-le puis touche une zone de l'image, <strong>ou glisse-le directement</strong> vers cette zone.</p></div>
       <div id="success" class="success" hidden><strong>✓ Archive S — Authentification effectuée</strong><p>La déclaration de Safir a été récupérée. Son annexe essentielle reste sous scellés jusqu'au rapprochement final avec Rubis.</p><p class="small">Fin de cette démonstration. La suite sera intégrée ultérieurement au portail du J24.</p></div>
     </div>
     <div class="bar"><span>Progression sauvegardée automatiquement dans ce navigateur</span><span id="progressText">Archive non récupérée</span></div>
@@ -109,38 +155,61 @@
   (()=>{
     'use strict';
     const KEY='bdn_2026_test_safir_v1';
-    const scenePaths=["assets/safir-bureau-ferme.webp","assets/safir-bureau-ouvert.webp","assets/safir-bureau-vide.webp"];
+    const scenePaths=['assets/safir-bureau-ferme.webp','assets/safir-bureau-ouvert.webp','assets/safir-bureau-vide.webp'];
     const envelopeImage='assets/safir-enveloppe.webp';
     const fadedImage='assets/safir-declaration.webp';
     const revealedImage='assets/safir-declaration-revelee.webp';
     const $=id=>document.getElementById(id);
-    function blank(){return {version:1,windowOpen:false,hasEnvelope:false,envelopeOpen:false,documentSelected:false,revealed:false,complete:false,hintLevel:0};}
-    function load(){try{const x=JSON.parse(localStorage.getItem(KEY));if(!x||x.version!==1)return blank();const v=blank();Object.keys(v).forEach(k=>{if(typeof x[k]===typeof v[k])v[k]=x[k];});return v;}catch(e){return blank();}}
-    let state=load(),modalKind=null,previousFocus=null,zones=false;
+    const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+    function blank(){return {version:1,windowOpen:false,hasEnvelope:false,envelopeOpen:false,documentSelected:false,revealed:false,complete:false,hintLevel:0,stringTaken:false,stringSelected:false,lampOff:false,notebookViewed:false};}
+    function load(){
+      try{const x=JSON.parse(localStorage.getItem(KEY));if(!x||x.version!==1)return blank();const v=blank();Object.keys(v).forEach(k=>{if(typeof x[k]===typeof v[k])v[k]=x[k];});return v;}
+      catch(e){return blank();}
+    }
+    let state=load(),modalKind=null,previousFocus=null,zones=false,animating=false;
+    let bubbleTimer=null,suppressedClicks=new WeakMap(),drag=null;
     function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){$('statusText').textContent='Sauvegarde locale indisponible : vérifie que ton navigateur autorise le stockage.';}}
-    function say(t){$('statusText').textContent=t;}
+    function say(text,label='OBSERVATION'){
+      $('statusText').textContent=text;
+      const box=$('sceneBubble');box.replaceChildren();
+      const strong=document.createElement('span');strong.className='bubble-label';strong.textContent=label;
+      const msg=document.createElement('span');msg.textContent=text;box.append(strong,msg);
+      box.classList.add('visible');clearTimeout(bubbleTimer);
+      bubbleTimer=setTimeout(()=>box.classList.remove('visible'),3700);
+    }
+    function ripple(event){
+      const rect=$('sceneWrap').getBoundingClientRect();const r=$('tapRipple');
+      const x=event?.clientX??rect.left+rect.width/2, y=event?.clientY??rect.top+rect.height/2;
+      r.style.left=(x-rect.left)+'px';r.style.top=(y-rect.top)+'px';r.classList.remove('play');void r.offsetWidth;r.classList.add('play');
+    }
     function phase(){return !state.windowOpen?0:(!state.hasEnvelope?1:2);}
-    function paint(){
-      const p=phase();$('sceneImage').src=scenePaths[p];
-      $('sceneImage').alt=p===0?'Safir repose sur une enveloppe devant une fenêtre aux volets fermés.':p===1?'Les volets sont ouverts. Safir observe un oiseau depuis l’arbre à chat. L’enveloppe est maintenant accessible.':'Safir est sur l’arbre à chat, les volets sont ouverts et l’enveloppe a disparu du bureau.';
-      $('inventoryItems').replaceChildren();
-      const items=[];
-      if(state.hasEnvelope&&!state.envelopeOpen)items.push({type:'envelope',label:'✉ Enveloppe'});
-      if(state.envelopeOpen)items.push({type:'document',label:state.revealed?'📜 Déclaration révélée':'📜 Feuillet'});
-      if(!items.length){const span=document.createElement('span');span.className='muted small';span.textContent='Vide pour l’instant.';$('inventoryItems').append(span);}
-      for(const item of items){const b=document.createElement('button');b.type='button';b.className='item';b.textContent=item.label;b.setAttribute('aria-pressed',String(item.type==='document'&&state.documentSelected));b.addEventListener('click',()=>{
-        if(item.type==='envelope')openModal('envelope');
-        else if(item.type==='document'){
-          if(state.revealed)openModal('revealed');
-          else if(state.documentSelected){state.documentSelected=false;save();paint();say('Le feuillet a été rangé dans l’inventaire.');}
-          else{state.documentSelected=true;save();paint();say('Feuillet en main. Où pourrais-tu mieux distinguer son écriture ?');}
-        }
-      });$('inventoryItems').append(b);}
-      $('inventoryHelp').hidden=!(state.envelopeOpen&&!state.revealed);
+    function renderImage(){
+      const p=phase();const im=$('sceneImage');const src=scenePaths[p];
+      if(im.getAttribute('src')!==src)im.src=src;
+      im.alt=p===0?'Safir repose sur une enveloppe devant une fenêtre aux volets fermés.':p===1?'Les volets sont ouverts. Safir observe un oiseau depuis l’arbre à chat. L’enveloppe est maintenant accessible.':'Safir est sur l’arbre à chat, les volets sont ouverts et l’enveloppe a disparu du bureau.';
+    }
+    function addInventory(type,label,isNew){
+      const b=document.createElement('button');b.type='button';b.className='item'+(isNew?' new-item':'');b.dataset.item=type;b.textContent=label;
+      b.setAttribute('aria-pressed',String((type==='document'&&state.documentSelected)||(type==='string'&&state.stringSelected)));
+      b.setAttribute('aria-label',label+'. Touchez pour sélectionner ou examiner; maintenez et glissez pour utiliser.');
+      b.addEventListener('click',()=>{if(suppressedClicks.get(b)){suppressedClicks.delete(b);return;}selectItem(type);});
+      enableDrag(b,type,'inventory');$('inventoryItems').append(b);
+    }
+    function paint(isNew=false){
+      if(!animating)renderImage();
+      const items=$('inventoryItems');items.replaceChildren();
+      if(state.hasEnvelope&&!state.envelopeOpen)addInventory('envelope','✉ Enveloppe',isNew);
+      if(state.envelopeOpen)addInventory('document',state.revealed?'📜 Déclaration':'📜 Feuillet',isNew);
+      if(state.stringTaken)addInventory('string','🧶 Ficelle',isNew);
+      if(!items.children.length){const span=document.createElement('span');span.className='muted small';span.textContent='Vide pour l’instant.';items.append(span);}
+      $('inventoryHelp').hidden=!(state.stringTaken||(state.envelopeOpen&&!state.revealed));
       $('success').hidden=!state.complete;
       $('progressText').textContent=state.complete?'Archive S authentifiée':state.envelopeOpen?'Feuillet en cours d’examen':state.hasEnvelope?'Enveloppe récupérée':state.windowOpen?'Dossier accessible':'Archive non récupérée';
       $('hintText').hidden=state.hintLevel===0;
       if(state.hintLevel>0)$('hintText').textContent=hintForStage();
+      $('sceneWrap').classList.toggle('lamp-dim',state.lampOff);
+      document.querySelectorAll('.hotspot').forEach(b=>b.setAttribute('aria-disabled',String(animating)));
     }
     function hintForStage(){
       const level=state.hintLevel;
@@ -150,60 +219,203 @@
       if(!state.revealed)return level===1?'Le texte n’est pas absent : il est trop peu contrasté. Certaines feuilles se lisent mieux lorsqu’elles sont traversées par la lumière.':'Sélectionne le feuillet dans l’inventaire, puis essaie la fenêtre ouverte.';
       return 'L’archive est désormais authentifiée.';
     }
-    function action(obj){
-      const useSheet=state.documentSelected&&state.envelopeOpen&&!state.revealed;
-      if(useSheet){
-        if(obj==='window'&&state.windowOpen){state.documentSelected=false;state.revealed=true;state.complete=true;state.hintLevel=0;save();paint();openModal('revealed');say('La lumière traverse le feuillet : les inscriptions sont désormais lisibles.');return;}
-        say('Le feuillet ne révèle rien de nouveau ici. Cherche un endroit permettant à la lumière de traverser le papier.');return;
+    async function animateTransition(next,kind){
+      if(animating)return;
+      animating=true;$('sceneWrap').classList.add('busy');
+      const full=$('sceneFullOverlay');full.src=scenePaths[next];
+      if(reducedMotion){renderImage();animating=false;$('sceneWrap').classList.remove('busy');paint();return;}
+      if(kind==='window'){
+        $('sceneWindowOverlay').hidden=false;
+        await sleep(60);
+        $('sceneWindowOverlay').classList.add('opening');
+        say('Les volets s’écartent lentement… Une silhouette apparaît sur la branche.','FENÊTRE');
+        await sleep(900);
+        $('sceneFlash').classList.add('active');
+        say('Un rouge-gorge ! Safir quitte enfin le dossier pour rejoindre son poste d’observation.','SAFIR');
+        await sleep(240);
+      } else {
+        $('sceneFlash').classList.add('active');
+        say('L’enveloppe quitte le bureau et rejoint ton inventaire.','DOCUMENT RÉCUPÉRÉ');
+        await sleep(120);
       }
+      full.hidden=false;
+      await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+      full.classList.add('fade-in');
+      await sleep(kind==='window'?690:560);
+      renderImage();
+      full.classList.remove('fade-in');full.hidden=true;
+      $('sceneWindowOverlay').classList.remove('opening');$('sceneWindowOverlay').hidden=true;
+      $('sceneFlash').classList.remove('active');
+      animating=false;$('sceneWrap').classList.remove('busy');paint();
+    }
+    function selectItem(type){
+      if(animating)return;
+      if(type==='envelope')openModal('envelope');
+      else if(type==='document'){
+        if(state.revealed){openModal('revealed');return;}
+        state.documentSelected=!state.documentSelected;state.stringSelected=false;save();paint();
+        say(state.documentSelected?'Tu prends le feuillet. Tu peux maintenant toucher sa destination ou le glisser jusque-là.':'Le feuillet est rangé dans l’inventaire.','INVENTAIRE');
+      } else if(type==='string'){
+        state.stringSelected=!state.stringSelected;state.documentSelected=false;save();paint();
+        say(state.stringSelected?'Tu tiens un bout de ficelle. Où souhaites-tu l’utiliser ?':'Tu ranges la ficelle.','INVENTAIRE');
+      }
+    }
+    function useItem(type,target){
+      if(type==='document'){
+        if(!state.envelopeOpen){say('Tu ne possèdes pas encore le feuillet.');return;}
+        if(state.revealed){openModal('revealed');return;}
+        if(target==='window'&&state.windowOpen){
+          state.documentSelected=false;state.stringSelected=false;state.revealed=true;state.complete=true;state.hintLevel=0;save();paint();
+          $('sceneFlash').classList.add('active');setTimeout(()=>$('sceneFlash').classList.remove('active'),550);
+          openModal('revealed');say('La lumière traverse le papier. Les inscriptions deviennent lisibles !','DÉCOUVERTE');
+        }else say(target==='lamp'?'La lampe éclaire seulement la surface du papier. Ses lettres restent pâles.':'Le feuillet ne révèle rien de nouveau ici. Sa matière semble laisser passer la lumière.','FEUILLET');
+      } else if(type==='string'){
+        if(!state.stringTaken){state.stringTaken=true;save();paint(true);}
+        if(target==='cat')say(state.windowOpen?'Safir attrape la ficelle du bout de la patte, puis retourne surveiller l’oiseau.':'Safir joue quelques secondes avec la ficelle… puis se recouche sur son dossier.','SAFIR');
+        else if(target==='tree')say('La ficelle se balance devant l’arbre à chat. Safir la remarque, mais c’est surtout la vue sur l’extérieur qui l’intéresse.','ARBRE À CHAT');
+        else if(target==='window')say('Une ficelle n’ouvrira pas ces volets. Peut-être suffit-il de toucher les poignées ?','FENÊTRE');
+        else say('La ficelle ne semble pas utile sur cet objet.','FICELLE');
+        state.stringSelected=false;save();paint();
+      } else if(type==='envelope'){
+        if(state.hasEnvelope&&!state.envelopeOpen)openModal('envelope');
+      }
+    }
+    async function action(obj,event){
+      if(animating)return;
+      if(event)ripple(event);
+      if(state.documentSelected&&state.envelopeOpen&&!state.revealed){useItem('document',obj);return;}
+      if(state.stringSelected){useItem('string',obj);return;}
       if(obj==='window'){
-        if(!state.windowOpen){state.windowOpen=true;state.hintLevel=0;save();paint();say('Les volets s’ouvrent. Un rouge-gorge attire immédiatement Safir, qui rejoint son poste d’observation.');}
-        else say('Les volets sont ouverts. La lumière hivernale éclaire le bureau.');
-      } else if(obj==='cat') say(state.windowOpen?'Safir surveille le rouge-gorge depuis son arbre à chat. Il n’a plus l’air préoccupé par les archives.':'Safir accepte les caresses… sans quitter le dossier. Manifestement, l’inspection n’est pas terminée.');
+        if(!state.windowOpen){
+          state.windowOpen=true;state.hintLevel=0;save();
+          await animateTransition(1,'window');
+        }else say('Les volets sont ouverts. Le rouge-gorge se tient juste dehors, et la lumière hivernale traverse la fenêtre.','FENÊTRE');
+      } else if(obj==='cat')say(state.windowOpen?'Safir est sur l’arbre à chat. Sa mission de surveillance du rouge-gorge est visiblement prioritaire.':'Safir reçoit volontiers tes caresses, mais reste étendu sur le dossier.','SAFIR');
       else if(obj==='envelope'){
-        if(!state.windowOpen)say('Une grande enveloppe est coincée sous Safir. Il ne paraît pas décidé à bouger.');
-        else if(!state.hasEnvelope){state.hasEnvelope=true;state.hintLevel=0;save();paint();say('Tu récupères l’enveloppe CONFIDENTIELLE. Elle rejoint ton inventaire.');}
+        if(!state.windowOpen)say('La grande enveloppe est coincée sous Safir. Pas question de la tirer de force.','ENVELOPPE');
+        else if(!state.hasEnvelope){state.hasEnvelope=true;state.hintLevel=0;save();await animateTransition(2,'envelope');paint(true);}
         else if(!state.envelopeOpen)openModal('envelope');
-        else say('L’enveloppe a déjà été ouverte ; le feuillet est dans ton inventaire.');
-      } else if(obj==='tree') say(state.windowOpen?'Safir a pris possession du poste d’observation. Pour lui, l’affaire est réglée.':'L’arbre à chat se trouve juste à côté de la fenêtre. Un poste de surveillance visiblement apprécié.');
-      else if(obj==='notebook') say('Observations sur Safir : aime surveiller l’extérieur, adore les ficelles et les bisous. Remarque du Bureau : coopération généralement excellente.');
-      else if(obj==='lamp') say(state.envelopeOpen?'La lampe éclaire correctement le bureau, mais la faible écriture reste difficile à distinguer.':'Lampe de bureau allumée. Les archives sont parfaitement éclairées.');
-      else if(obj==='string') say('Une ficelle. Safir serait probablement partant pour jouer, mais il garde actuellement un œil sur les dossiers.');
+        else say('L’enveloppe a déjà été ouverte. Le feuillet est dans ton inventaire.','ENVELOPPE');
+      } else if(obj==='tree')say(state.windowOpen?'Safir s’est installé sur l’arbre à chat : il regarde fixement le rouge-gorge.':'L’arbre à chat est placé juste devant la fenêtre. Un poste de surveillance idéal.','ARBRE À CHAT');
+      else if(obj==='notebook')openModal('notebook');
+      else if(obj==='lamp'){
+        state.lampOff=!state.lampOff;save();paint();
+        say(state.lampOff?'Clic. La lampe s’éteint. La pièce devient plus sombre.':'Clic. La lampe se rallume, mais elle n’éclaire que la surface des documents.','LAMPE');
+      } else if(obj==='string'){
+        if(!state.stringTaken){state.stringTaken=true;state.stringSelected=true;state.documentSelected=false;save();paint(true);say('Tu déroules un bout de ficelle. La bobine reste sur le bureau ; la ficelle est maintenant dans ton inventaire.','FICELLE');}
+        else{selectItem('string');}
+      }
     }
     function addModalButton(label,actionFn,secondary=false){const b=document.createElement('button');b.type='button';b.className=secondary?'btn alt':'btn';b.textContent=label;b.addEventListener('click',actionFn);$('modalActions').append(b);}
     function modalImage(src,alt){const im=document.createElement('img');im.src=src;im.alt=alt;im.loading='eager';$('modalVisual').replaceChildren(im);return im;}
     function openModal(kind){
+      if(animating)return;
       previousFocus=document.activeElement;modalKind=kind;$('modalActions').replaceChildren();$('modalLayer').hidden=false;
-      if(kind==='envelope'){
+      if(kind==='notebook'){
+        $('modalTitle').textContent='Carnet d’observations';
+        $('modalVisual').innerHTML='<div style="padding:16px;background:#efe2c4;color:#33281f;border:3px double #826d4b;border-radius:8px;font-family:Georgia,serif"><div style="font-size:13px;letter-spacing:.1em;color:#775637">BUREAU DES NOËLS · NOTES DU SERVICE</div><h3 style="color:#533c28">Observations sur Safir</h3><p>• Excellent observateur de l’extérieur.<br>• Intérêt confirmé pour les ficelles.<br>• Apprécie les bisous et les câlins.<br>• Coopération avec le Bureau : variable.</p></div>';
+        $('modalDescription').textContent='Une note manuscrite précise : « Toute opération de consultation doit tenir compte de ses habitudes. »';
+        addModalButton('Refermer le carnet',closeModal);
+        state.notebookViewed=true;save();
+      } else if(kind==='envelope'){
         $('modalTitle').textContent='Enveloppe confidentielle';modalImage(envelopeImage,'Enveloppe scellée par une ficelle rouge et deux attaches métalliques. Dossier Safir BN-2026-F024.');
         $('modalDescription').textContent='Une enveloppe cartonnée, fermée par un cordon rouge enroulé autour de deux attaches.';
         const region=document.createElement('button');region.type='button';region.className='cord-hotspot';region.setAttribute('aria-label','Examiner le fermoir rouge de l’enveloppe');region.addEventListener('click',openSheet);$('modalVisual').append(region);
-        addModalButton('Ouvrir le fermoir',openSheet);
+        addModalButton('Défaire le fermoir',openSheet);
       } else if(kind==='faded'){
         $('modalTitle').textContent='Feuillet de Safir';modalImage(fadedImage,'Document ancien dont plusieurs mots sont visibles : Je déclare, Noël, Rubis, douceur, Car, même Noël. Les autres inscriptions sont très pâles.');
         $('modalDescription').textContent='Le papier n’est pas déchiré : des traces d’écriture parcourent encore les fibres. Sous cette lumière, beaucoup de mots restent indistincts.';
-        addModalButton('Prendre le feuillet',()=>{state.documentSelected=true;save();closeModal();paint();say('Tu tiens le feuillet. Il faudrait une autre façon de voir à travers son papier.');});
+        addModalButton('Prendre le feuillet',()=>{state.documentSelected=true;state.stringSelected=false;save();closeModal();paint(true);say('Feuillet en main. Tu peux le faire glisser sur la scène pour l’examiner ailleurs.','FEUILLET');});
         addModalButton('Ranger pour plus tard',closeModal,true);
       } else if(kind==='revealed'){
         $('modalTitle').textContent='Déclaration révélée';modalImage(revealedImage,'Déclaration de Safir révélée par transparence : Je déclare souhaiter un Noël paisible pour notre foyer. J’aimerais le passer avec Rubis, entouré de mes humains, de douceur, de bisous, de ficelles et de moments à observer les oiseaux. Car chacun peut avoir ses envies pour un même Noël.');
         $('modalDescription').textContent='Les mots se révèlent grâce à la lumière venant de la fenêtre. La déclaration de Safir est authentifiée ; sa condition essentielle reste sous scellés pour l’étape de rapprochement.';
-        addModalButton('Enregistrer l’archive S',()=>{state.complete=true;save();closeModal();paint();say('Archive S authentifiée. La condition essentielle sera consultée lors du rapprochement des deux déclarations.');});
+        addModalButton('Enregistrer l’archive S',()=>{state.complete=true;save();closeModal();paint();say('Archive S authentifiée. La condition essentielle sera consultée lors du rapprochement des deux déclarations.','ARCHIVE VALIDÉE');});
       }
       $('modalClose').focus();
     }
-    function openSheet(){state.envelopeOpen=true;state.hintLevel=0;save();paint();openModal('faded');say('Le cordon est défait. Tu découvres un feuillet ancien, dont l’écriture paraît presque effacée.');}
+    let openingSheet=false;
+    async function openSheet(){
+      if(openingSheet)return;openingSheet=true;
+      const visual=$('modalVisual');visual.classList.add('modal-untie');
+      $('modalDescription').textContent='Le cordon se défait…';
+      await sleep(reducedMotion?40:590);
+      visual.classList.remove('modal-untie');
+      state.envelopeOpen=true;state.hintLevel=0;save();paint();openModal('faded');
+      say('Le fermoir est ouvert. À l’intérieur : un feuillet dont les mots sont presque invisibles.','ENVELOPPE OUVERTE');
+      openingSheet=false;
+    }
     function closeModal(){modalKind=null;$('modalLayer').hidden=true;if(previousFocus&&typeof previousFocus.focus==='function')previousFocus.focus();}
-    document.querySelectorAll('.hotspot').forEach(b=>b.addEventListener('click',()=>action(b.dataset.object)));
-    $('zonesButton').addEventListener('click',()=>{zones=!zones;$('sceneWrap').classList.toggle('showzones',zones);$('zonesButton').setAttribute('aria-pressed',String(zones));});
-    $('hintButton').addEventListener('click',()=>{state.hintLevel=Math.min(2,state.hintLevel+1);save();paint();});
+
+    /* Les objets récupérés se sélectionnent par toucher OU se déplacent par glisser. */
+    function enableDrag(element,type,origin){
+      element.style.touchAction='none';
+      element.addEventListener('pointerdown',e=>{
+        if(e.button!==0||animating||!$('modalLayer').hidden)return;
+        drag={pointerId:e.pointerId,type,origin,source:element,x0:e.clientX,y0:e.clientY,lastX:e.clientX,lastY:e.clientY,moving:false,ghost:null};
+        try{element.setPointerCapture(e.pointerId);}catch(err){}
+      });
+      element.addEventListener('pointermove',e=>{
+        if(!drag||drag.pointerId!==e.pointerId||drag.source!==element)return;
+        drag.lastX=e.clientX;drag.lastY=e.clientY;
+        if(!drag.moving&&Math.hypot(e.clientX-drag.x0,e.clientY-drag.y0)>9){
+          drag.moving=true;const ghost=document.createElement('div');ghost.className='drag-ghost';
+          ghost.textContent=type==='document'?'📜 Feuillet':type==='string'?'🧶 Ficelle':'✉ Enveloppe';
+          document.body.append(ghost);drag.ghost=ghost;element.classList.add('drag-source');
+        }
+        if(drag.moving){
+          drag.ghost.style.left=e.clientX+'px';drag.ghost.style.top=e.clientY+'px';
+          document.querySelectorAll('.hotspot.drop-target').forEach(b=>b.classList.remove('drop-target'));
+          const beneath=document.elementFromPoint(e.clientX,e.clientY);
+          const target=beneath?.closest?.('.hotspot');
+          if(target)target.classList.add('drop-target');
+        }
+      });
+      element.addEventListener('pointerup',e=>{
+        if(!drag||drag.pointerId!==e.pointerId||drag.source!==element)return;
+        const d=drag;drag=null;document.querySelectorAll('.hotspot.drop-target').forEach(b=>b.classList.remove('drop-target'));
+        if(d.ghost)d.ghost.remove();element.classList.remove('drag-source');
+        if(!d.moving)return;
+        suppressedClicks.set(element,true);
+        const beneath=document.elementFromPoint(e.clientX,e.clientY);const target=beneath?.closest?.('.hotspot');
+        if(d.origin==='scene'&&type==='string'){
+          state.stringTaken=true;state.stringSelected=false;save();paint(true);
+          if(target)useItem('string',target.dataset.object);
+          else say('Tu as récupéré un bout de ficelle. Il est dans ton inventaire.','FICELLE');
+        } else if(d.origin==='scene'&&type==='envelope'){
+          if(state.windowOpen&&!state.hasEnvelope){action('envelope',e);}else action('envelope',e);
+        } else if(target)useItem(type,target.dataset.object);
+        else say('Tu peux poser cet objet sur un élément de la scène, ou simplement le toucher dans l’inventaire pour le sélectionner.','INVENTAIRE');
+      });
+      element.addEventListener('pointercancel',()=>{if(!drag||drag.source!==element)return;if(drag.ghost)drag.ghost.remove();element.classList.remove('drag-source');drag=null;});
+    }
+    document.querySelectorAll('.hotspot').forEach(b=>{
+      b.addEventListener('click',e=>{
+        if(suppressedClicks.get(b)){suppressedClicks.delete(b);return;}
+        b.classList.remove('pressed');void b.offsetWidth;b.classList.add('pressed');setTimeout(()=>b.classList.remove('pressed'),440);
+        action(b.dataset.object,e);
+      });
+    });
+    ['string','envelope'].forEach(type=>{
+      const el=document.querySelector('[data-object="'+type+'"]');enableDrag(el,type,'scene');
+    });
+    $('zonesButton').addEventListener('click',()=>{zones=!zones;$('sceneWrap').classList.toggle('showzones',zones);$('zonesButton').setAttribute('aria-pressed',String(zones));say(zones?'Zones d’interaction affichées. Essaie de toucher les objets.':'Zones masquées. Les objets restent interactifs.','AIDE');});
+    $('hintButton').addEventListener('click',()=>{state.hintLevel=Math.min(2,state.hintLevel+1);save();paint();say('Un nouvel indice est apparu sous les commandes.','INDICE');});
     $('resetButton').addEventListener('click',()=>{$('resetLayer').hidden=false;$('resetCancel').focus();});
     $('resetCancel').addEventListener('click',()=>{$('resetLayer').hidden=true;$('resetButton').focus();});
-    $('resetConfirm').addEventListener('click',()=>{state=blank();try{localStorage.removeItem(KEY);}catch(e){}$('resetLayer').hidden=true;zones=false;$('sceneWrap').classList.remove('showzones');$('zonesButton').setAttribute('aria-pressed','false');paint();say('L’archive paraît intacte. Reste à comprendre comment récupérer ce qu’elle contient.');$('resetButton').focus();});
+    $('resetConfirm').addEventListener('click',()=>{
+      state=blank();try{localStorage.removeItem(KEY);}catch(e){}$('resetLayer').hidden=true;
+      zones=false;$('sceneWrap').classList.remove('showzones');$('zonesButton').setAttribute('aria-pressed','false');
+      $('sceneFullOverlay').hidden=true;$('sceneWindowOverlay').classList.remove('opening');$('sceneWindowOverlay').hidden=true;$('sceneFlash').classList.remove('active');
+      animating=false;$('sceneWrap').classList.remove('busy');paint();say('L’archive paraît intacte. Reste à comprendre comment récupérer ce qu’elle contient.','NOUVELLE PARTIE');$('resetButton').focus();
+    });
     $('modalClose').addEventListener('click',closeModal);
     $('modalLayer').addEventListener('click',e=>{if(e.target===$('modalLayer'))closeModal();});
     document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('modalLayer').hidden)closeModal();else if(!$('resetLayer').hidden)$('resetCancel').click();}if(e.key==='Tab'&&!$('modalLayer').hidden){const focusable=[...$('modalLayer').querySelectorAll('button:not([disabled])')];let i=focusable.indexOf(document.activeElement);if(e.shiftKey&&i===0){e.preventDefault();focusable.at(-1).focus();}else if(!e.shiftKey&&i===focusable.length-1){e.preventDefault();focusable[0].focus();}}});
+    // Préchargement pour éviter tout clignotement au passage d'un état visuel à l'autre.
+    [scenePaths[1],scenePaths[2],envelopeImage,fadedImage,revealedImage].forEach(src=>{const im=new Image();im.src=src;});
     paint();
-    if(state.complete)say('Cette épreuve est déjà terminée sur ce navigateur. Tu peux examiner la déclaration depuis l’inventaire ou recommencer.');
+    if(state.complete)say('Cette épreuve a déjà été terminée sur ce navigateur. Tu peux examiner la déclaration depuis l’inventaire ou recommencer.','PARTIE REPRISE');
   })();
   </script>
 </body>
