@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#18281f">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Bureau des Noëls — Archives de Safir (test)</title>
+  <style>
+    :root{color-scheme:dark;--bg:#101c17;--panel:#1a2c22;--panel2:#263d2e;--gold:#e5ca91;--ink:#f3f0e5;--muted:#c0ccbf;--line:#776e50;--success:#a4deb6;--error:#ffb6a9}
+    *{box-sizing:border-box} [hidden]{display:none!important}
+    body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -20%,#34523a,#18281f 56%,#0b1510);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;padding:16px 12px 35px}
+    button{font:inherit;cursor:pointer} button:focus-visible{outline:3px solid #fff3ad;outline-offset:3px}
+    button:disabled{opacity:.55;cursor:not-allowed}
+    .shell{max-width:980px;margin:0 auto;border:1px solid var(--line);border-radius:16px;background:var(--panel);overflow:hidden;box-shadow:0 20px 70px #0007}
+    header{padding:18px 22px 15px;border-bottom:1px solid #52634e;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .eyebrow{letter-spacing:.14em;text-transform:uppercase;font-size:11px;color:var(--gold);font-weight:750}
+    h1,h2,h3{font-family:Georgia,serif;color:var(--gold);line-height:1.2} h1{font-size:clamp(23px,4vw,32px);margin:3px 0 0} h2{font-size:24px;margin:0 0 12px} h3{font-size:19px;margin:4px 0 8px}
+    .rightmeta{text-align:right;font-size:12px;color:var(--muted)}
+    .body{padding:18px 18px 24px} .intro{margin:0 0 14px;color:#dce6da}
+    .pill{display:inline-block;background:#314432;color:var(--gold);border:1px solid #716f4b;border-radius:99px;padding:4px 9px;font-size:11px;letter-spacing:.03em}
+    .scene-wrap{position:relative;width:100%;margin:0 auto;background:#0b100d;border-radius:10px;overflow:hidden;border:1px solid #627357;line-height:0}
+    .scene-wrap img{display:block;width:100%;height:auto;object-fit:contain;user-select:none;-webkit-user-drag:none}
+    .hotspot{position:absolute;background:transparent;border:1px solid transparent;border-radius:12px;touch-action:manipulation;transform:translateZ(0)}
+    .hotspot:hover,.hotspot:focus-visible{border:2px solid rgba(255,230,151,.9);background:rgba(255,230,151,.12)}
+    .showzones .hotspot{border:2px dashed rgba(255,230,151,.9);background:rgba(255,230,151,.12)}
+    .hotspot:after{content:"";position:absolute;inset:30%;border-radius:50%;background:#ffe5a0;opacity:0;box-shadow:0 0 20px #e6c37c;pointer-events:none}
+    .showzones .hotspot:after{opacity:.7}
+    .toast{min-height:88px;margin:12px 0;padding:14px 16px;background:#24372c;border-left:3px solid var(--gold);border-radius:6px;display:flex;align-items:center;gap:12px}
+    .toast p{margin:0;line-height:1.5} .toast .symbol{font-size:23px}
+    .controls{display:flex;flex-wrap:wrap;gap:9px;justify-content:space-between;align-items:center}
+    .controls-left,.controls-right{display:flex;flex-wrap:wrap;gap:8px}
+    .btn{border-radius:9px;border:1px solid #95815a;background:#e6c990;color:#1b2c21;font-weight:700;min-height:44px;padding:9px 13px}
+    .btn.alt{background:transparent;color:var(--gold)}
+    .btn.small{font-size:13px}
+    .inventory{padding:13px 15px;margin-top:14px;border:1px solid #607358;border-radius:9px;background:#172a20}
+    .inventory h3{font-size:16px;margin:0 0 8px} .inventory-items{display:flex;flex-wrap:wrap;gap:8px}
+    .item{border-radius:9px;border:1px solid #806c48;background:#2c4232;color:#fff4d8;min-height:42px;padding:8px 11px}
+    .item[aria-pressed=true]{background:#e2c992;color:#1b291e;box-shadow:0 0 0 2px #cba65c}
+    .inv-help{font-size:13px;margin:9px 0 0;color:var(--muted)}
+    .small{font-size:13px;color:var(--muted)} .hint{border:1px solid #7d7655;background:#2e3a2a;border-radius:9px;padding:12px;margin:12px 0}
+    .success{border:1px solid #74b28c;background:#1f4630;border-radius:10px;padding:15px;margin-top:16px}
+    .success strong{color:var(--success)} .success p{margin:8px 0 0}
+    .muted{color:var(--muted)}
+    .bar{margin-top:16px;padding:12px;border-top:1px solid #52634e;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;color:#bbc8ba}
+    .modal-layer{position:fixed;inset:0;background:#040805e8;z-index:90;display:flex;align-items:center;justify-content:center;padding:12px}
+    .modal{background:#1b2d23;border:1px solid #b39b67;border-radius:13px;overflow:hidden;width:min(100%,850px);max-height:calc(100dvh - 24px);display:flex;flex-direction:column;box-shadow:0 25px 80px #000a}
+    .modal-header{padding:12px 15px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #65745c}
+    .modal-header h2{margin:0;font-size:20px}
+    .modal-body{min-height:0;overflow:auto;overscroll-behavior:contain;padding:13px}
+    .modal-body img{display:block;width:100%;height:auto;max-height:60dvh;object-fit:contain;border-radius:7px}
+    .modal-action{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .modal-note{line-height:1.5;margin:12px 0 0}
+    .image-action-wrap{position:relative;line-height:0}
+    .cord-hotspot{position:absolute;top:24%;left:44%;width:17%;height:43%;background:transparent;border:2px solid transparent;border-radius:12px}
+    .cord-hotspot:focus-visible,.cord-hotspot:hover{outline:2px solid var(--gold);background:#e7c88322}
+    .confirm{width:min(100%,460px)}
+    .reset-actions{display:flex;flex-direction:column;gap:10px}
+    .error{color:var(--error)}
+    @media(max-width:600px){body{padding:8px 5px 25px}.shell{border-radius:12px}.body{padding:11px 9px 15px}header{padding:12px 13px}.toast{min-height:100px;padding:10px}.controls{gap:10px}.rightmeta{text-align:left}.modal-body{padding:8px}.modal-header h2{font-size:18px}.scene-wrap{border-radius:6px}.hotspot{border-radius:7px}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div><div class="eyebrow">Bureau des Noëls · Dossier BN-2026-F024</div><h1>Archives confidentielles</h1></div>
+      <div class="rightmeta"><span class="pill">TEST DE L'ÉPREUVE SAFIR</span><div>Version indépendante du portail J24</div></div>
+    </header>
+    <div class="body">
+      <p class="intro">Un occupant non habilité s'est installé sur une pièce du dossier. Le Bureau sollicite votre assistance.</p>
+      <div class="scene-wrap" id="sceneWrap">
+        <img id="sceneImage" src="assets/safir-bureau-ferme.webp" width="1536" height="864" alt="Bureau de Noël : Safir est couché sur une grande enveloppe, près d'une fenêtre aux volets fermés et d'un arbre à chat.">
+        <button class="hotspot" data-object="window" aria-label="Examiner la fenêtre" style="left:46%;top:1%;width:27%;height:53%"></button>
+        <button class="hotspot" data-object="cat" aria-label="Examiner Safir" style="left:19%;top:42%;width:46%;height:35%"></button>
+        <button class="hotspot" data-object="envelope" aria-label="Examiner l'enveloppe confidentielle" style="left:36%;top:68%;width:30%;height:19%"></button>
+        <button class="hotspot" data-object="tree" aria-label="Examiner l'arbre à chat" style="left:79%;top:14%;width:21%;height:62%"></button>
+        <button class="hotspot" data-object="notebook" aria-label="Examiner le carnet d'observations" style="left:8%;top:75%;width:32%;height:24%"></button>
+        <button class="hotspot" data-object="lamp" aria-label="Examiner la lampe" style="left:11%;top:17%;width:25%;height:42%"></button>
+        <button class="hotspot" data-object="string" aria-label="Examiner la ficelle" style="left:61%;top:71%;width:28%;height:26%"></button>
+      </div>
+      <div class="toast" aria-live="polite" role="status"><span class="symbol" aria-hidden="true">✦</span><p id="statusText">L'archive paraît intacte. Reste à comprendre comment récupérer ce qu'elle contient.</p></div>
+      <div class="controls">
+        <div class="controls-left"><button id="zonesButton" class="btn alt small" type="button" aria-pressed="false">◌ Zones interactives</button><button id="hintButton" class="btn alt small" type="button">💡 Indice</button></div>
+        <div class="controls-right"><button id="resetButton" class="btn alt small" type="button">↺ Recommencer</button></div>
+      </div>
+      <div id="hintText" class="hint" hidden aria-live="polite"></div>
+      <div class="inventory"><h3>Inventaire</h3><div id="inventoryItems" class="inventory-items"><span class="muted small">Vide pour l'instant.</span></div><p id="inventoryHelp" class="inv-help" hidden>Un objet sélectionné peut servir dans la scène. Touchez une zone pour l'utiliser.</p></div>
+      <div id="success" class="success" hidden><strong>✓ Archive S — Authentification effectuée</strong><p>La déclaration de Safir a été récupérée. Son annexe essentielle reste sous scellés jusqu'au rapprochement final avec Rubis.</p><p class="small">Fin de cette démonstration. La suite sera intégrée ultérieurement au portail du J24.</p></div>
+    </div>
+    <div class="bar"><span>Progression sauvegardée automatiquement dans ce navigateur</span><span id="progressText">Archive non récupérée</span></div>
+  </div>
+
+  <div id="modalLayer" class="modal-layer" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header"><h2 id="modalTitle">Archives</h2><button id="modalClose" class="btn alt small" type="button">Fermer ✕</button></div>
+      <div class="modal-body"><div id="modalVisual" class="image-action-wrap"></div><p id="modalDescription" class="modal-note"></p><div id="modalActions" class="modal-action"></div></div>
+    </section>
+  </div>
+
+  <div id="resetLayer" class="modal-layer" hidden>
+    <section class="modal confirm" role="dialog" aria-modal="true" aria-labelledby="resetTitle">
+      <div class="modal-header"><h2 id="resetTitle">Recommencer l'épreuve ?</h2></div>
+      <div class="modal-body"><p>La progression de <strong>ce test Safir seulement</strong> sera effacée. Les sauvegardes du J14, J20 et J24 resteront intactes.</p><div class="reset-actions"><button id="resetConfirm" type="button" class="btn">Oui, recommencer Safir</button><button id="resetCancel" type="button" class="btn alt">Annuler</button></div></div>
+    </section>
+  </div>
+
+  <script>
+  (()=>{
+    'use strict';
+    const KEY='bdn_2026_test_safir_v1';
+    const scenePaths=["assets/safir-bureau-ferme.webp","assets/safir-bureau-ouvert.webp","assets/safir-bureau-vide.webp"];
+    const envelopeImage='assets/safir-enveloppe.webp';
+    const fadedImage='assets/safir-declaration.webp';
+    const revealedImage='assets/safir-declaration-revelee.webp';
+    const $=id=>document.getElementById(id);
+    function blank(){return {version:1,windowOpen:false,hasEnvelope:false,envelopeOpen:false,documentSelected:false,revealed:false,complete:false,hintLevel:0};}
+    function load(){try{const x=JSON.parse(localStorage.getItem(KEY));if(!x||x.version!==1)return blank();const v=blank();Object.keys(v).forEach(k=>{if(typeof x[k]===typeof v[k])v[k]=x[k];});return v;}catch(e){return blank();}}
+    let state=load(),modalKind=null,previousFocus=null,zones=false;
+    function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){$('statusText').textContent='Sauvegarde locale indisponible : vérifie que ton navigateur autorise le stockage.';}}
+    function say(t){$('statusText').textContent=t;}
+    function phase(){return !state.windowOpen?0:(!state.hasEnvelope?1:2);}
+    function paint(){
+      const p=phase();$('sceneImage').src=scenePaths[p];
+      $('sceneImage').alt=p===0?'Safir repose sur une enveloppe devant une fenêtre aux volets fermés.':p===1?'Les volets sont ouverts. Safir observe un oiseau depuis l’arbre à chat. L’enveloppe est maintenant accessible.':'Safir est sur l’arbre à chat, les volets sont ouverts et l’enveloppe a disparu du bureau.';
+      $('inventoryItems').replaceChildren();
+      const items=[];
+      if(state.hasEnvelope&&!state.envelopeOpen)items.push({type:'envelope',label:'✉ Enveloppe'});
+      if(state.envelopeOpen)items.push({type:'document',label:state.revealed?'📜 Déclaration révélée':'📜 Feuillet'});
+      if(!items.length){const span=document.createElement('span');span.className='muted small';span.textContent='Vide pour l’instant.';$('inventoryItems').append(span);}
+      for(const item of items){const b=document.createElement('button');b.type='button';b.className='item';b.textContent=item.label;b.setAttribute('aria-pressed',String(item.type==='document'&&state.documentSelected));b.addEventListener('click',()=>{
+        if(item.type==='envelope')openModal('envelope');
+        else if(item.type==='document'){
+          if(state.revealed)openModal('revealed');
+          else if(state.documentSelected){state.documentSelected=false;save();paint();say('Le feuillet a été rangé dans l’inventaire.');}
+          else{state.documentSelected=true;save();paint();say('Feuillet en main. Où pourrais-tu mieux distinguer son écriture ?');}
+        }
+      });$('inventoryItems').append(b);}
+      $('inventoryHelp').hidden=!(state.envelopeOpen&&!state.revealed);
+      $('success').hidden=!state.complete;
+      $('progressText').textContent=state.complete?'Archive S authentifiée':state.envelopeOpen?'Feuillet en cours d’examen':state.hasEnvelope?'Enveloppe récupérée':state.windowOpen?'Dossier accessible':'Archive non récupérée';
+      $('hintText').hidden=state.hintLevel===0;
+      if(state.hintLevel>0)$('hintText').textContent=hintForStage();
+    }
+    function hintForStage(){
+      const level=state.hintLevel;
+      if(!state.windowOpen)return level===1?'Safir regarde souvent dehors. Il existe un meilleur poste d’observation dans cette pièce.':'Que voit-on derrière les volets ?';
+      if(!state.hasEnvelope)return level===1?'Il n’y a plus personne sur le courrier.':'L’enveloppe posée sur le bureau peut maintenant être récupérée.';
+      if(!state.envelopeOpen)return level===1?'Examine le courrier récupéré.':'Le fermoir de l’enveloppe est au milieu.';
+      if(!state.revealed)return level===1?'Le texte n’est pas absent : il est trop peu contrasté. Certaines feuilles se lisent mieux lorsqu’elles sont traversées par la lumière.':'Sélectionne le feuillet dans l’inventaire, puis essaie la fenêtre ouverte.';
+      return 'L’archive est désormais authentifiée.';
+    }
+    function action(obj){
+      const useSheet=state.documentSelected&&state.envelopeOpen&&!state.revealed;
+      if(useSheet){
+        if(obj==='window'&&state.windowOpen){state.documentSelected=false;state.revealed=true;state.complete=true;state.hintLevel=0;save();paint();openModal('revealed');say('La lumière traverse le feuillet : les inscriptions sont désormais lisibles.');return;}
+        say('Le feuillet ne révèle rien de nouveau ici. Cherche un endroit permettant à la lumière de traverser le papier.');return;
+      }
+      if(obj==='window'){
+        if(!state.windowOpen){state.windowOpen=true;state.hintLevel=0;save();paint();say('Les volets s’ouvrent. Un rouge-gorge attire immédiatement Safir, qui rejoint son poste d’observation.');}
+        else say('Les volets sont ouverts. La lumière hivernale éclaire le bureau.');
+      } else if(obj==='cat') say(state.windowOpen?'Safir surveille le rouge-gorge depuis son arbre à chat. Il n’a plus l’air préoccupé par les archives.':'Safir accepte les caresses… sans quitter le dossier. Manifestement, l’inspection n’est pas terminée.');
+      else if(obj==='envelope'){
+        if(!state.windowOpen)say('Une grande enveloppe est coincée sous Safir. Il ne paraît pas décidé à bouger.');
+        else if(!state.hasEnvelope){state.hasEnvelope=true;state.hintLevel=0;save();paint();say('Tu récupères l’enveloppe CONFIDENTIELLE. Elle rejoint ton inventaire.');}
+        else if(!state.envelopeOpen)openModal('envelope');
+        else say('L’enveloppe a déjà été ouverte ; le feuillet est dans ton inventaire.');
+      } else if(obj==='tree') say(state.windowOpen?'Safir a pris possession du poste d’observation. Pour lui, l’affaire est réglée.':'L’arbre à chat se trouve juste à côté de la fenêtre. Un poste de surveillance visiblement apprécié.');
+      else if(obj==='notebook') say('Observations sur Safir : aime surveiller l’extérieur, adore les ficelles et les bisous. Remarque du Bureau : coopération généralement excellente.');
+      else if(obj==='lamp') say(state.envelopeOpen?'La lampe éclaire correctement le bureau, mais la faible écriture reste difficile à distinguer.':'Lampe de bureau allumée. Les archives sont parfaitement éclairées.');
+      else if(obj==='string') say('Une ficelle. Safir serait probablement partant pour jouer, mais il garde actuellement un œil sur les dossiers.');
+    }
+    function addModalButton(label,actionFn,secondary=false){const b=document.createElement('button');b.type='button';b.className=secondary?'btn alt':'btn';b.textContent=label;b.addEventListener('click',actionFn);$('modalActions').append(b);}
+    function modalImage(src,alt){const im=document.createElement('img');im.src=src;im.alt=alt;im.loading='eager';$('modalVisual').replaceChildren(im);return im;}
+    function openModal(kind){
+      previousFocus=document.activeElement;modalKind=kind;$('modalActions').replaceChildren();$('modalLayer').hidden=false;
+      if(kind==='envelope'){
+        $('modalTitle').textContent='Enveloppe confidentielle';modalImage(envelopeImage,'Enveloppe scellée par une ficelle rouge et deux attaches métalliques. Dossier Safir BN-2026-F024.');
+        $('modalDescription').textContent='Une enveloppe cartonnée, fermée par un cordon rouge enroulé autour de deux attaches.';
+        const region=document.createElement('button');region.type='button';region.className='cord-hotspot';region.setAttribute('aria-label','Examiner le fermoir rouge de l’enveloppe');region.addEventListener('click',openSheet);$('modalVisual').append(region);
+        addModalButton('Ouvrir le fermoir',openSheet);
+      } else if(kind==='faded'){
+        $('modalTitle').textContent='Feuillet de Safir';modalImage(fadedImage,'Document ancien dont plusieurs mots sont visibles : Je déclare, Noël, Rubis, douceur, Car, même Noël. Les autres inscriptions sont très pâles.');
+        $('modalDescription').textContent='Le papier n’est pas déchiré : des traces d’écriture parcourent encore les fibres. Sous cette lumière, beaucoup de mots restent indistincts.';
+        addModalButton('Prendre le feuillet',()=>{state.documentSelected=true;save();closeModal();paint();say('Tu tiens le feuillet. Il faudrait une autre façon de voir à travers son papier.');});
+        addModalButton('Ranger pour plus tard',closeModal,true);
+      } else if(kind==='revealed'){
+        $('modalTitle').textContent='Déclaration révélée';modalImage(revealedImage,'Déclaration de Safir révélée par transparence : Je déclare souhaiter un Noël paisible pour notre foyer. J’aimerais le passer avec Rubis, entouré de mes humains, de douceur, de bisous, de ficelles et de moments à observer les oiseaux. Car chacun peut avoir ses envies pour un même Noël.');
+        $('modalDescription').textContent='Les mots se révèlent grâce à la lumière venant de la fenêtre. La déclaration de Safir est authentifiée ; sa condition essentielle reste sous scellés pour l’étape de rapprochement.';
+        addModalButton('Enregistrer l’archive S',()=>{state.complete=true;save();closeModal();paint();say('Archive S authentifiée. La condition essentielle sera consultée lors du rapprochement des deux déclarations.');});
+      }
+      $('modalClose').focus();
+    }
+    function openSheet(){state.envelopeOpen=true;state.hintLevel=0;save();paint();openModal('faded');say('Le cordon est défait. Tu découvres un feuillet ancien, dont l’écriture paraît presque effacée.');}
+    function closeModal(){modalKind=null;$('modalLayer').hidden=true;if(previousFocus&&typeof previousFocus.focus==='function')previousFocus.focus();}
+    document.querySelectorAll('.hotspot').forEach(b=>b.addEventListener('click',()=>action(b.dataset.object)));
+    $('zonesButton').addEventListener('click',()=>{zones=!zones;$('sceneWrap').classList.toggle('showzones',zones);$('zonesButton').setAttribute('aria-pressed',String(zones));});
+    $('hintButton').addEventListener('click',()=>{state.hintLevel=Math.min(2,state.hintLevel+1);save();paint();});
+    $('resetButton').addEventListener('click',()=>{$('resetLayer').hidden=false;$('resetCancel').focus();});
+    $('resetCancel').addEventListener('click',()=>{$('resetLayer').hidden=true;$('resetButton').focus();});
+    $('resetConfirm').addEventListener('click',()=>{state=blank();try{localStorage.removeItem(KEY);}catch(e){}$('resetLayer').hidden=true;zones=false;$('sceneWrap').classList.remove('showzones');$('zonesButton').setAttribute('aria-pressed','false');paint();say('L’archive paraît intacte. Reste à comprendre comment récupérer ce qu’elle contient.');$('resetButton').focus();});
+    $('modalClose').addEventListener('click',closeModal);
+    $('modalLayer').addEventListener('click',e=>{if(e.target===$('modalLayer'))closeModal();});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('modalLayer').hidden)closeModal();else if(!$('resetLayer').hidden)$('resetCancel').click();}if(e.key==='Tab'&&!$('modalLayer').hidden){const focusable=[...$('modalLayer').querySelectorAll('button:not([disabled])')];let i=focusable.indexOf(document.activeElement);if(e.shiftKey&&i===0){e.preventDefault();focusable.at(-1).focus();}else if(!e.shiftKey&&i===focusable.length-1){e.preventDefault();focusable[0].focus();}}});
+    paint();
+    if(state.complete)say('Cette épreuve est déjà terminée sur ce navigateur. Tu peux examiner la déclaration depuis l’inventaire ou recommencer.');
+  })();
+  </script>
+</body>
+</html>
