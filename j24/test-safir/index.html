@@ -121,6 +121,12 @@
     #sceneBubble{bottom:3%;max-height:42%;overflow:hidden}
     @media(max-width:600px){.notebook-sheet{font-size:15px;padding:14px}.notebook-sheet h3{font-size:20px}#sceneBubble{font-size:12px}}
     @media(prefers-reduced-motion:reduce){#shuttersVfx .shutter,#shuttersVfx .bird{transition:none!important}}
+
+    /* V3.1 : les retours ne recouvrent jamais l’illustration. */
+    #sceneBubble{position:relative!important;left:auto!important;right:auto!important;bottom:auto!important;z-index:auto!important;display:none;margin:9px 0 0;padding:9px 12px;max-height:none!important;overflow:visible!important;transform:none!important;opacity:1!important;transition:none!important;border-radius:9px;line-height:1.4;font-size:14px;box-shadow:none}
+    #sceneBubble.visible{display:block;transform:none!important}
+    #sceneBubble .bubble-label{display:inline;margin-right:8px;font-size:10px}
+    @media(max-width:600px){#sceneBubble{font-size:13px!important;padding:8px 10px}}
   </style>
 </head>
 <body>
@@ -138,7 +144,7 @@
         <img id="sceneFullOverlay" alt="" hidden>
         <div id="sceneFlash" aria-hidden="true"></div><div id="shuttersVfx" aria-hidden="true" hidden><span class="shutter left"></span><span class="shutter right"></span><span class="bird">✦</span></div>
         <div id="tapRipple" aria-hidden="true"></div>
-        <div id="sceneBubble" aria-hidden="true"></div>
+        
         <button class="hotspot" data-object="window" aria-label="Examiner la fenêtre" style="left:46%;top:1%;width:27%;height:53%"></button>
         <button class="hotspot" data-object="cat" aria-label="Examiner Safir" style="left:19%;top:42%;width:46%;height:35%"></button>
         <button class="hotspot" data-object="envelope" aria-label="Examiner l'enveloppe confidentielle" style="left:36%;top:68%;width:30%;height:19%"></button>
@@ -147,6 +153,7 @@
         <button class="hotspot" data-object="lamp" aria-label="Examiner la lampe" style="left:11%;top:17%;width:25%;height:42%"></button>
         <button class="hotspot" data-object="string" aria-label="Examiner la ficelle" style="left:61%;top:71%;width:28%;height:26%"></button>
       </div>
+      <div id="sceneBubble" aria-hidden="true"></div>
       <div class="toast screenreader-only" aria-live="polite" role="status"><span class="symbol" aria-hidden="true">✦</span><p id="statusText">L'archive paraît intacte. Reste à comprendre comment récupérer ce qu'elle contient.</p></div>
       <div class="controls">
         <div class="controls-left"><button id="zonesButton" class="btn alt small" type="button" aria-pressed="false">◌ Zones interactives</button><button id="hintButton" class="btn alt small" type="button">💡 Indice</button></div>
