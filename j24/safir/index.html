@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#18281f">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Bureau des Noëls — Archives de Safir (test)</title>
+  <style>
+    :root{color-scheme:dark;--bg:#101c17;--panel:#1a2c22;--panel2:#263d2e;--gold:#e5ca91;--ink:#f3f0e5;--muted:#c0ccbf;--line:#776e50;--success:#a4deb6;--error:#ffb6a9}
+    *{box-sizing:border-box} [hidden]{display:none!important}
+    body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -20%,#34523a,#18281f 56%,#0b1510);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;padding:16px 12px 35px}
+    button{font:inherit;cursor:pointer} button:focus-visible{outline:3px solid #fff3ad;outline-offset:3px}
+    button:disabled{opacity:.55;cursor:not-allowed}
+    .shell{max-width:980px;margin:0 auto;border:1px solid var(--line);border-radius:16px;background:var(--panel);overflow:hidden;box-shadow:0 20px 70px #0007}
+    header{padding:18px 22px 15px;border-bottom:1px solid #52634e;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .eyebrow{letter-spacing:.14em;text-transform:uppercase;font-size:11px;color:var(--gold);font-weight:750}
+    h1,h2,h3{font-family:Georgia,serif;color:var(--gold);line-height:1.2} h1{font-size:clamp(23px,4vw,32px);margin:3px 0 0} h2{font-size:24px;margin:0 0 12px} h3{font-size:19px;margin:4px 0 8px}
+    .rightmeta{text-align:right;font-size:12px;color:var(--muted)}
+    .body{padding:18px 18px 24px} .intro{margin:0 0 14px;color:#dce6da}
+    .pill{display:inline-block;background:#314432;color:var(--gold);border:1px solid #716f4b;border-radius:99px;padding:4px 9px;font-size:11px;letter-spacing:.03em}
+    .scene-wrap{position:relative;width:100%;margin:0 auto;background:#0b100d;border-radius:10px;overflow:hidden;border:1px solid #627357;line-height:0}
+    .scene-wrap img{display:block;width:100%;height:auto;object-fit:contain;user-select:none;-webkit-user-drag:none}
+    .hotspot{position:absolute;background:transparent;border:1px solid transparent;border-radius:12px;touch-action:manipulation;transform:translateZ(0)}
+    .hotspot:hover,.hotspot:focus-visible{border:2px solid rgba(255,230,151,.9);background:rgba(255,230,151,.12)}
+    .showzones .hotspot{border:2px dashed rgba(255,230,151,.9);background:rgba(255,230,151,.12)}
+    .hotspot:after{content:"";position:absolute;inset:30%;border-radius:50%;background:#ffe5a0;opacity:0;box-shadow:0 0 20px #e6c37c;pointer-events:none}
+    .showzones .hotspot:after{opacity:.7}
+    .toast{min-height:88px;margin:12px 0;padding:14px 16px;background:#24372c;border-left:3px solid var(--gold);border-radius:6px;display:flex;align-items:center;gap:12px}
+    .toast p{margin:0;line-height:1.5} .toast .symbol{font-size:23px}
+    .controls{display:flex;flex-wrap:wrap;gap:9px;justify-content:space-between;align-items:center}
+    .controls-left,.controls-right{display:flex;flex-wrap:wrap;gap:8px}
+    .btn{border-radius:9px;border:1px solid #95815a;background:#e6c990;color:#1b2c21;font-weight:700;min-height:44px;padding:9px 13px}
+    .btn.alt{background:transparent;color:var(--gold)}
+    .btn.small{font-size:13px}
+    .inventory{padding:13px 15px;margin-top:14px;border:1px solid #607358;border-radius:9px;background:#172a20}
+    .inventory h3{font-size:16px;margin:0 0 8px} .inventory-items{display:flex;flex-wrap:wrap;gap:8px}
+    .item{border-radius:9px;border:1px solid #806c48;background:#2c4232;color:#fff4d8;min-height:42px;padding:8px 11px}
+    .item[aria-pressed=true]{background:#e2c992;color:#1b291e;box-shadow:0 0 0 2px #cba65c}
+    .inv-help{font-size:13px;margin:9px 0 0;color:var(--muted)}
+    .small{font-size:13px;color:var(--muted)} .hint{border:1px solid #7d7655;background:#2e3a2a;border-radius:9px;padding:12px;margin:12px 0}
+    .success{border:1px solid #74b28c;background:#1f4630;border-radius:10px;padding:15px;margin-top:16px}
+    .success strong{color:var(--success)} .success p{margin:8px 0 0}
+    .muted{color:var(--muted)}
+    .bar{margin-top:16px;padding:12px;border-top:1px solid #52634e;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;color:#bbc8ba}
+    .modal-layer{position:fixed;inset:0;background:#040805e8;z-index:90;display:flex;align-items:center;justify-content:center;padding:12px}
+    .modal{background:#1b2d23;border:1px solid #b39b67;border-radius:13px;overflow:hidden;width:min(100%,850px);max-height:calc(100dvh - 24px);display:flex;flex-direction:column;box-shadow:0 25px 80px #000a}
+    .modal-header{padding:12px 15px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #65745c}
+    .modal-header h2{margin:0;font-size:20px}
+    .modal-body{min-height:0;overflow:auto;overscroll-behavior:contain;padding:13px}
+    .modal-body img{display:block;width:100%;height:auto;max-height:60dvh;object-fit:contain;border-radius:7px}
+    .modal-action{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .modal-note{line-height:1.5;margin:12px 0 0}
+    .image-action-wrap{position:relative;line-height:0}
+    .cord-hotspot{position:absolute;top:24%;left:44%;width:17%;height:43%;background:transparent;border:2px solid transparent;border-radius:12px}
+    .cord-hotspot:focus-visible,.cord-hotspot:hover{outline:2px solid var(--gold);background:#e7c88322}
+    .confirm{width:min(100%,460px)}
+    .reset-actions{display:flex;flex-direction:column;gap:10px}
+    .error{color:var(--error)}
+    @media(max-width:600px){body{padding:8px 5px 25px}.shell{border-radius:12px}.body{padding:11px 9px 15px}header{padding:12px 13px}.toast{min-height:100px;padding:10px}.controls{gap:10px}.rightmeta{text-align:left}.modal-body{padding:8px}.modal-header h2{font-size:18px}.scene-wrap{border-radius:6px}.hotspot{border-radius:7px}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+    /* Safir V3 — interface et effets */
+    .scene-wrap{isolation:isolate;overflow:hidden}
+    #sceneImage{position:relative;z-index:0}
+    #sceneWindowOverlay,#sceneFullOverlay{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none;-webkit-user-drag:none}
+    #sceneWindowOverlay{z-index:1;clip-path:ellipse(20% 40% at 59% 27%);-webkit-mask-image:radial-gradient(ellipse 20% 40% at 59% 27%,#000 49%,transparent 98%);mask-image:radial-gradient(ellipse 20% 40% at 59% 27%,#000 49%,transparent 98%);opacity:0;transition:opacity 1.1s ease}
+    #sceneWindowOverlay.opening{opacity:1}
+    #sceneFullOverlay{z-index:2;opacity:0;transition:opacity .72s ease-in-out}
+    #sceneFullOverlay.fade-in{opacity:1}
+    #sceneFlash{position:absolute;inset:0;z-index:4;pointer-events:none;background:radial-gradient(ellipse at 60% 35%,rgba(253,234,160,.62),transparent 58%);opacity:0;transition:opacity .5s ease}
+    #sceneFlash.active{opacity:1}
+    .hotspot{z-index:6;cursor:pointer;transition:background .18s ease,border-color .18s ease,box-shadow .18s ease}
+    .hotspot.pressed{border:2px solid rgba(255,230,151,.9);background:rgba(255,230,151,.17);box-shadow:0 0 20px #f7dc9166}
+    .hotspot.drop-target{border:3px solid #e8ce93;background:rgba(236,212,142,.22);box-shadow:inset 0 0 18px #f4d29366}
+    .scene-wrap.busy .hotspot{pointer-events:none}
+    #sceneBubble{z-index:8;position:absolute;left:3%;right:3%;bottom:4%;border:1px solid #ecd7a2;background:rgba(16,30,23,.95);border-radius:11px;padding:10px 12px;line-height:1.35;color:#fff4d6;font-size:clamp(12px,2.1vw,15px);box-shadow:0 6px 24px #000b;pointer-events:none;opacity:0;transform:translateY(12px);transition:opacity .24s ease,transform .24s ease}
+    #sceneBubble.visible{opacity:1;transform:translateY(0)}
+    #sceneBubble .bubble-label{display:block;color:#e3c991;text-transform:uppercase;letter-spacing:.08em;font-weight:800;font-size:10px;margin-bottom:3px}
+    #tapRipple{position:absolute;z-index:7;border:2px solid #ffdfa2;border-radius:50%;width:14px;height:14px;margin:-7px;pointer-events:none;opacity:0;transform:scale(.6)}
+    #tapRipple.play{animation:tap-ripple .55s ease-out both}
+    @keyframes tap-ripple{from{opacity:1;transform:scale(.5)}to{opacity:0;transform:scale(4)}}
+    .scene-wrap.lamp-dim #sceneImage,.scene-wrap.lamp-dim #sceneFullOverlay{filter:brightness(.64) saturate(.85)}
+    .scene-wrap.lamp-dim #sceneFlash{opacity:0}
+    .item{touch-action:none;user-select:none;-webkit-user-select:none;transition:transform .17s ease,background .17s ease}
+    .item:active{transform:scale(.96)}
+    .item.new-item{animation:item-arrive .6s cubic-bezier(.2,1.3,.3,1)}
+    @keyframes item-arrive{0%{transform:translateY(-13px) scale(.8);opacity:.2}100%{transform:translateY(0) scale(1);opacity:1}}
+    .drag-ghost{position:fixed;z-index:300;pointer-events:none;transform:translate(-50%,-55%);padding:11px 15px;border:2px solid #f1d89d;border-radius:12px;background:#1f3829ed;color:#fff1d2;box-shadow:0 10px 30px #000a;font-size:17px;font-weight:800;white-space:nowrap}
+    .drag-source{opacity:.55}
+    .inventory-items .item[aria-pressed=true]:after{content:' • en main';font-size:11px;font-weight:500}
+    .instructions{display:flex;align-items:flex-start;gap:8px;background:#293d2d;border:1px solid #566e52;border-radius:8px;padding:10px 11px;margin:0 0 10px;font-size:13px;color:#e5e3d5}
+    .instructions .hand{font-size:20px;line-height:1.2}
+    .focus-pulse{animation:focus-pulse .62s ease-out}
+    @keyframes focus-pulse{50%{filter:brightness(1.13) saturate(1.1)}}
+    .modal-untie{animation:untie .65s ease-in-out}
+    @keyframes untie{50%{filter:brightness(1.35);transform:scale(1.03)}100%{opacity:.15;transform:scale(.95)}}
+    .toast{min-height:75px}
+    .btn[aria-pressed=true]{background:#e6c990;color:#1b2c21}
+    @media(max-width:600px){#sceneBubble{font-size:12px;padding:8px 10px;bottom:2%}.instructions{padding:8px;margin-bottom:8px}.toast{min-height:72px}}
+    @media(prefers-reduced-motion:reduce){#shuttersVfx .shutter,#sceneFullOverlay,#sceneBubble{transition:none!important}.drag-ghost{transition:none!important}}
+
+    /* V3 : un message visible dans la scène; annonce accessible hors écran. */
+    .screenreader-only{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;padding:0!important;margin:-1px!important;border:0!important}
+    .notebook-sheet{display:block;background:#efe0b8;color:#493a29;padding:18px;border:2px solid #b4a07a;border-radius:10px;font:normal 16px/1.6 Georgia,serif;white-space:normal;overflow-wrap:break-word}
+    .notebook-sheet .notebook-kicker{font:700 11px/1.4 system-ui,sans-serif;letter-spacing:.08em;color:#79613e}
+    .notebook-sheet h3{margin:8px 0 11px;font:600 23px/1.25 Georgia,serif;color:#493a29}
+    .notebook-sheet ul{margin:0 0 10px;padding-left:22px;list-style:disc}
+    .notebook-sheet li{margin:8px 0;line-height:1.55}
+    .notebook-sheet p{margin:12px 0 0;line-height:1.55}
+    .notebook-note{border-top:1px solid #b4a07a;padding-top:12px;font-style:italic}
+    #shuttersVfx{position:absolute;z-index:3;left:46.5%;top:2%;width:26.5%;height:52%;pointer-events:none;overflow:hidden;perspective:400px;border-radius:3px}
+    #shuttersVfx .shutter{position:absolute;top:0;width:51%;height:100%;border:1px solid #4e3221;background:repeating-linear-gradient(0deg,#36271c 0 7%,#68472c 8% 11%,#231a16 12% 13%);box-shadow:inset 0 0 8px #170e08;transition:transform 1.05s ease}
+    #shuttersVfx .left{left:0;transform-origin:left center}
+    #shuttersVfx .right{right:0;transform-origin:right center}
+    #shuttersVfx.open .left{transform:rotateY(-87deg)}
+    #shuttersVfx.open .right{transform:rotateY(87deg)}
+    #shuttersVfx .bird{position:absolute;top:27%;left:45%;font-size:17px;color:#ffe9a7;opacity:0;transition:opacity .5s ease .9s,transform .6s ease .9s;transform:scale(.3)}
+    #shuttersVfx.open .bird{opacity:1;transform:scale(1)}
+    .modal-note:empty{display:none}
+    #sceneBubble{bottom:3%;max-height:42%;overflow:hidden}
+    @media(max-width:600px){.notebook-sheet{font-size:15px;padding:14px}.notebook-sheet h3{font-size:20px}#sceneBubble{font-size:12px}}
+    @media(prefers-reduced-motion:reduce){#shuttersVfx .shutter,#shuttersVfx .bird{transition:none!important}}
+
+    /* V3.1 : les retours ne recouvrent jamais l’illustration. */
+    #sceneBubble{position:relative!important;left:auto!important;right:auto!important;bottom:auto!important;z-index:auto!important;display:none;margin:9px 0 0;padding:9px 12px;max-height:none!important;overflow:visible!important;transform:none!important;opacity:1!important;transition:none!important;border-radius:9px;line-height:1.4;font-size:14px;box-shadow:none}
+    #sceneBubble.visible{display:block;transform:none!important}
+    #sceneBubble .bubble-label{display:inline;margin-right:8px;font-size:10px}
+    @media(max-width:600px){#sceneBubble{font-size:13px!important;padding:8px 10px}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div><div class="eyebrow">Bureau des Noëls · Dossier BN-2026-F024</div><h1>Archives confidentielles</h1></div>
+      <div class="rightmeta"><span class="pill">ARCHIVE CONFIDENTIELLE · S</span><div>Commission de clôture · 24 décembre</div></div>
+    </header>
+    <div class="body">
+      <p class="intro">Un occupant non habilité s'est installé sur une pièce du dossier. Le Bureau sollicite votre assistance.</p>
+      <div class="instructions"><span class="hand" aria-hidden="true">☝</span><span>Touche les objets pour les examiner.</span></div>
+      <div class="scene-wrap" id="sceneWrap">
+        <img id="sceneImage" src="../test-safir/assets/safir-bureau-ferme.webp" width="1536" height="864" alt="Bureau de Noël : Safir est couché sur une grande enveloppe, près d'une fenêtre aux volets fermés et d'un arbre à chat.">
+        <img id="sceneWindowOverlay" src="../test-safir/assets/safir-bureau-ouvert.webp" alt="" hidden>
+        <img id="sceneFullOverlay" alt="" hidden>
+        <div id="sceneFlash" aria-hidden="true"></div><div id="shuttersVfx" aria-hidden="true" hidden><span class="shutter left"></span><span class="shutter right"></span><span class="bird">✦</span></div>
+        <div id="tapRipple" aria-hidden="true"></div>
+        
+        <button class="hotspot" data-object="window" aria-label="Examiner la fenêtre" style="left:46%;top:1%;width:27%;height:53%"></button>
+        <button class="hotspot" data-object="cat" aria-label="Examiner Safir" style="left:19%;top:42%;width:46%;height:35%"></button>
+        <button class="hotspot" data-object="envelope" aria-label="Examiner l'enveloppe confidentielle" style="left:36%;top:68%;width:30%;height:19%"></button>
+        <button class="hotspot" data-object="tree" aria-label="Examiner l'arbre à chat" style="left:79%;top:14%;width:21%;height:62%"></button>
+        <button class="hotspot" data-object="notebook" aria-label="Examiner le carnet d'observations" style="left:8%;top:75%;width:32%;height:24%"></button>
+        <button class="hotspot" data-object="lamp" aria-label="Examiner la lampe" style="left:11%;top:17%;width:25%;height:42%"></button>
+        <button class="hotspot" data-object="string" aria-label="Examiner la ficelle" style="left:61%;top:71%;width:28%;height:26%"></button>
+      </div>
+      <div id="sceneBubble" aria-hidden="true"></div>
+      <div class="toast screenreader-only" aria-live="polite" role="status"><span class="symbol" aria-hidden="true">✦</span><p id="statusText">L'archive paraît intacte. Reste à comprendre comment récupérer ce qu'elle contient.</p></div>
+      <div class="controls">
+        <div class="controls-left"><button id="zonesButton" class="btn alt small" type="button" aria-pressed="false">◌ Zones interactives</button><button id="hintButton" class="btn alt small" type="button">💡 Indice</button></div>
+        <div class="controls-right"><button id="resetButton" class="btn alt small" type="button">↺ Recommencer</button></div>
+      </div>
+      <div id="hintText" class="hint" hidden aria-live="polite"></div>
+      <div class="inventory"><h3>Inventaire</h3><div id="inventoryItems" class="inventory-items"><span class="muted small">Vide pour l'instant.</span></div><p id="inventoryHelp" class="inv-help" hidden>Pour utiliser un objet : sélectionne-le puis touche un endroit du décor.</p></div>
+      <div id="success" class="success" hidden><strong>✓ ARCHIVE S RÉCUPÉRÉE</strong><p>La déclaration de Safir est maintenant lisible.</p><p class="small">Le Bureau remercie Safir pour sa coopération involontaire. La suite viendra lors du rapprochement des deux dossiers.</p></div>
+    </div>
+    <div class="bar"><span>Progression sauvegardée automatiquement dans ce navigateur</span><span id="progressText">Archive non récupérée</span></div>
+  </div>
+
+  <div id="modalLayer" class="modal-layer" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header"><h2 id="modalTitle">Archives</h2><button id="modalClose" class="btn alt small" type="button">Fermer ✕</button></div>
+      <div class="modal-body"><div id="modalVisual" class="image-action-wrap"></div><p id="modalDescription" class="modal-note"></p><div id="modalActions" class="modal-action"></div></div>
+    </section>
+  </div>
+
+  <div id="resetLayer" class="modal-layer" hidden>
+    <section class="modal confirm" role="dialog" aria-modal="true" aria-labelledby="resetTitle">
+      <div class="modal-header"><h2 id="resetTitle">Recommencer l'épreuve ?</h2></div>
+      <div class="modal-body"><p>La progression de <strong>l'enquête Safir du J24</strong> sera effacée. Les archives déjà consultées et les autres journées ne seront pas modifiées.</p><div class="reset-actions"><button id="resetConfirm" type="button" class="btn">Oui, recommencer Safir</button><button id="resetCancel" type="button" class="btn alt">Annuler</button></div></div>
+    </section>
+  </div>
+
+  <script>
+  (()=>{
+    'use strict';
+    const KEY='bdn_2026_j24_safir_v1';
+    const scenePaths=['../test-safir/assets/safir-bureau-ferme.webp','../test-safir/assets/safir-bureau-ouvert.webp','../test-safir/assets/safir-bureau-vide.webp'];
+    const envelopeImage='../test-safir/assets/safir-enveloppe.webp';
+    const fadedImage='../test-safir/assets/safir-declaration.webp';
+    const revealedImage='../test-safir/assets/safir-declaration-revelee.webp';
+    const $=id=>document.getElementById(id);
+    const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+    function blank(){return {version:1,windowOpen:false,hasEnvelope:false,envelopeOpen:false,documentSelected:false,revealed:false,complete:false,hintLevel:0,stringTaken:false,stringSelected:false,lampOff:false,notebookViewed:false};}
+    function load(){
+      try{const x=JSON.parse(localStorage.getItem(KEY));if(!x||x.version!==1)return blank();const v=blank();Object.keys(v).forEach(k=>{if(typeof x[k]===typeof v[k])v[k]=x[k];});return v;}
+      catch(e){return blank();}
+    }
+    let state=load(),modalKind=null,previousFocus=null,zones=false,animating=false;
+    let bubbleTimer=null,suppressedClicks=new WeakMap(),drag=null;
+    function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){$('statusText').textContent='Sauvegarde locale indisponible : vérifie que ton navigateur autorise le stockage.';}}
+    function say(text,label='OBSERVATION'){
+      $('statusText').textContent=text;
+      const box=$('sceneBubble');box.replaceChildren();
+      const strong=document.createElement('span');strong.className='bubble-label';strong.textContent=label;
+      const msg=document.createElement('span');msg.textContent=text;box.append(strong,msg);
+      box.classList.add('visible');clearTimeout(bubbleTimer);
+      bubbleTimer=setTimeout(()=>box.classList.remove('visible'),4300);
+    }
+    function ripple(event){
+      const rect=$('sceneWrap').getBoundingClientRect();const r=$('tapRipple');
+      const x=event?.clientX??rect.left+rect.width/2, y=event?.clientY??rect.top+rect.height/2;
+      r.style.left=(x-rect.left)+'px';r.style.top=(y-rect.top)+'px';r.classList.remove('play');void r.offsetWidth;r.classList.add('play');
+    }
+    function phase(){return !state.windowOpen?0:(!state.hasEnvelope?1:2);}
+    function renderImage(){
+      const p=phase();const im=$('sceneImage');const src=scenePaths[p];
+      if(im.getAttribute('src')!==src)im.src=src;
+      im.alt=p===0?'Safir repose sur une enveloppe devant une fenêtre aux volets fermés.':p===1?'Les volets sont ouverts. Safir observe un oiseau depuis l’arbre à chat. L’enveloppe est maintenant accessible.':'Safir est sur l’arbre à chat, les volets sont ouverts et l’enveloppe a disparu du bureau.';
+    }
+    function addInventory(type,label,isNew){
+      const b=document.createElement('button');b.type='button';b.className='item'+(isNew?' new-item':'');b.dataset.item=type;b.textContent=label;
+      b.setAttribute('aria-pressed',String((type==='document'&&state.documentSelected)||(type==='string'&&state.stringSelected)));
+      b.setAttribute('aria-label',label+'. Touchez pour sélectionner ou examiner; maintenez et glissez pour utiliser.');
+      b.addEventListener('click',()=>{if(suppressedClicks.get(b)){suppressedClicks.delete(b);return;}selectItem(type);});
+      enableDrag(b,type,'inventory');$('inventoryItems').append(b);
+    }
+    function paint(isNew=false){
+      if(!animating)renderImage();
+      const items=$('inventoryItems');items.replaceChildren();
+      if(state.hasEnvelope&&!state.envelopeOpen)addInventory('envelope','✉ Enveloppe',isNew);
+      if(state.envelopeOpen)addInventory('document',state.revealed?'📜 Déclaration':'📜 Feuillet',isNew);
+      if(state.stringTaken)addInventory('string','🧶 Ficelle',isNew);
+      if(!items.children.length){const span=document.createElement('span');span.className='muted small';span.textContent='Vide pour l’instant.';items.append(span);}
+      $('inventoryHelp').hidden=!(state.stringTaken||(state.envelopeOpen&&!state.revealed));
+      $('success').hidden=!state.complete;
+      $('progressText').textContent=state.complete?'Archive S authentifiée':state.envelopeOpen?'Feuillet en cours d’examen':state.hasEnvelope?'Enveloppe récupérée':state.windowOpen?'Dossier accessible':'Archive non récupérée';
+      $('hintText').hidden=state.hintLevel===0;
+      if(state.hintLevel>0)$('hintText').textContent=hintForStage();
+      $('sceneWrap').classList.toggle('lamp-dim',state.lampOff);
+      document.querySelectorAll('.hotspot').forEach(b=>b.setAttribute('aria-disabled',String(animating)));
+    }
+    function hintForStage(){
+      const level=state.hintLevel;
+      if(!state.windowOpen)return level===1?'Safir regarde souvent dehors. Il existe un meilleur poste d’observation dans cette pièce.':'Que voit-on derrière les volets ?';
+      if(!state.hasEnvelope)return level===1?'Il n’y a plus personne sur le courrier.':'L’enveloppe posée sur le bureau peut maintenant être récupérée.';
+      if(!state.envelopeOpen)return level===1?'Examine le courrier récupéré.':'Le fermoir de l’enveloppe est au milieu.';
+      if(!state.revealed)return level===1?'Le texte n’est pas absent : il est trop peu contrasté. Certaines feuilles se lisent mieux lorsqu’elles sont traversées par la lumière.':'Sélectionne le feuillet dans l’inventaire, puis essaie la fenêtre ouverte.';
+      return 'L’archive est désormais authentifiée.';
+    }
+    async function animateTransition(next,kind){
+      if(animating)return;
+      animating=true;$('sceneWrap').classList.add('busy');
+      const full=$('sceneFullOverlay');full.src=scenePaths[next];
+      if(reducedMotion){renderImage();animating=false;$('sceneWrap').classList.remove('busy');paint();return;}
+      if(kind==='window'){
+         $('shuttersVfx').hidden=false;void $('shuttersVfx').offsetWidth;$('shuttersVfx').classList.add('open');
+        $('sceneWindowOverlay').hidden=false;
+        await sleep(60);
+        $('sceneWindowOverlay').classList.add('opening');
+        say('Les volets s’ouvrent… Un oiseau apparaît dehors.','FENÊTRE');
+        await sleep(1070);
+        $('sceneFlash').classList.add('active');
+        say('Un rouge-gorge ! Safir file vers l’arbre à chat.','SAFIR');
+        await sleep(240);
+      } else {
+        $('sceneFlash').classList.add('active');
+        say('L’enveloppe quitte le bureau et rejoint ton inventaire.','DOCUMENT RÉCUPÉRÉ');
+        await sleep(120);
+      }
+      full.hidden=false;
+      await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+      full.classList.add('fade-in');
+      await sleep(kind==='window'?690:560);
+      renderImage();
+      full.classList.remove('fade-in');full.hidden=true;
+      $('sceneWindowOverlay').classList.remove('opening');$('sceneWindowOverlay').hidden=true;
+       $('shuttersVfx').classList.remove('open');$('shuttersVfx').hidden=true;
+      $('sceneFlash').classList.remove('active');
+      animating=false;$('sceneWrap').classList.remove('busy');paint();
+    }
+    function selectItem(type){
+      if(animating)return;
+      if(type==='envelope')openModal('envelope');
+      else if(type==='document'){
+        if(state.revealed){openModal('revealed');return;}
+        state.documentSelected=!state.documentSelected;state.stringSelected=false;save();paint();
+        say(state.documentSelected?'Feuillet en main. Où pourrais-tu mieux le lire ?':'Tu ranges le feuillet.','INVENTAIRE');
+      } else if(type==='string'){
+        state.stringSelected=!state.stringSelected;state.documentSelected=false;save();paint();
+        say(state.stringSelected?'Ficelle en main. Safir aurait-il envie de jouer ?':'Tu ranges la ficelle.','INVENTAIRE');
+      }
+    }
+    function useItem(type,target){
+      if(type==='document'){
+        if(!state.envelopeOpen){say('Tu ne possèdes pas encore le feuillet.');return;}
+        if(state.revealed){openModal('revealed');return;}
+        if(target==='window'&&state.windowOpen){
+          state.documentSelected=false;state.stringSelected=false;state.revealed=true;state.hintLevel=0;save();paint();
+          $('sceneFlash').classList.add('active');setTimeout(()=>$('sceneFlash').classList.remove('active'),550);
+          openModal('revealed');
+        }else say(target==='lamp'?'Quelques lettres ressortent… mais ce n’est toujours pas lisible.':'Le feuillet ne révèle rien ici. Il lui faudrait une autre lumière.','FEUILLET');
+      } else if(type==='string'){
+        if(!state.stringTaken){state.stringTaken=true;save();paint(true);}
+        if(target==='cat')say(state.windowOpen?'Safir attrape la ficelle du bout de la patte, puis retourne surveiller l’oiseau.':'Safir joue quelques secondes avec la ficelle… puis se recouche sur son dossier.','SAFIR');
+        else if(target==='tree')say('La ficelle se balance devant l’arbre à chat. Safir la remarque, mais c’est surtout la vue sur l’extérieur qui l’intéresse.','ARBRE À CHAT');
+        else if(target==='window')say('Une ficelle n’ouvrira pas ces volets. Peut-être suffit-il de toucher les poignées ?','FENÊTRE');
+        else say('La ficelle ne semble pas utile sur cet objet.','FICELLE');
+        state.stringSelected=false;save();paint();
+      } else if(type==='envelope'){
+        if(state.hasEnvelope&&!state.envelopeOpen)openModal('envelope');
+      }
+    }
+    async function action(obj,event){
+      if(animating)return;
+      if(event)ripple(event);
+      if(state.documentSelected&&state.envelopeOpen&&!state.revealed){useItem('document',obj);return;}
+      if(state.stringSelected){useItem('string',obj);return;}
+      if(obj==='window'){
+        if(!state.windowOpen){
+          state.windowOpen=true;state.hintLevel=0;save();
+          await animateTransition(1,'window');
+        }else say('Les volets sont ouverts. Le rouge-gorge se tient juste dehors, et la lumière hivernale traverse la fenêtre.','FENÊTRE');
+      } else if(obj==='cat')say(state.windowOpen?'Safir est sur l’arbre à chat. Sa mission de surveillance du rouge-gorge est visiblement prioritaire.':'Safir accepte un bisou… mais garde sa place.','SAFIR');
+      else if(obj==='envelope'){
+        if(!state.windowOpen)say('Safir est couché dessus. Impossible de prendre l’enveloppe sans le déranger.','ENVELOPPE');
+        else if(!state.hasEnvelope){state.hasEnvelope=true;state.hintLevel=0;save();await animateTransition(2,'envelope');paint(true);}
+        else if(!state.envelopeOpen)openModal('envelope');
+        else say('L’enveloppe a déjà été ouverte. Le feuillet est dans ton inventaire.','ENVELOPPE');
+      } else if(obj==='tree')say(state.windowOpen?'Safir s’est installé sur l’arbre à chat : il regarde fixement le rouge-gorge.':'Un excellent poste d’observation. Dommage que les volets soient fermés.','ARBRE À CHAT');
+      else if(obj==='notebook')openModal('notebook');
+      else if(obj==='lamp'){
+        state.lampOff=!state.lampOff;save();paint();
+        say(state.lampOff?'Clic. La lampe s’éteint. La pièce devient plus sombre.':'Clic. La lampe se rallume, mais elle n’éclaire que la surface des documents.','LAMPE');
+      } else if(obj==='string'){
+        if(!state.stringTaken){state.stringTaken=true;state.stringSelected=true;state.documentSelected=false;save();paint(true);say('Tu récupères la ficelle. Safir va peut-être vouloir jouer.','FICELLE');}
+        else{selectItem('string');}
+      }
+    }
+    function addModalButton(label,actionFn,secondary=false){const b=document.createElement('button');b.type='button';b.className=secondary?'btn alt':'btn';b.textContent=label;b.addEventListener('click',actionFn);$('modalActions').append(b);}
+    function modalImage(src,alt){const im=document.createElement('img');im.src=src;im.alt=alt;im.loading='eager';$('modalVisual').replaceChildren(im);return im;}
+    function openModal(kind){
+      if(animating)return;
+      previousFocus=document.activeElement;modalKind=kind;$('modalActions').replaceChildren();$('modalLayer').hidden=false;
+      if(kind==='notebook'){
+        $('modalTitle').textContent='Carnet d’observations';
+        $('modalVisual').innerHTML='<div class="notebook-sheet"><div class="notebook-kicker">BUREAU DES NOËLS · SERVICE D’OBSERVATION</div><h3>Observations sur Safir</h3><ul><li>Surveillance des oiseaux : très assidue</li><li>Ficelles : intérêt élevé</li><li>Bisous : demandes fréquentes</li></ul><p class="notebook-note">« Tout déplacement doit être suffisamment motivé. »</p></div>';
+        $('modalDescription').textContent='';
+        addModalButton('Refermer le carnet',closeModal);
+        state.notebookViewed=true;save();
+      } else if(kind==='envelope'){
+        $('modalTitle').textContent='Enveloppe confidentielle';modalImage(envelopeImage,'Enveloppe scellée par une ficelle rouge et deux attaches métalliques. Dossier Safir BN-2026-F024.');
+        $('modalDescription').textContent='L’enveloppe est fermée par un cordon rouge.';
+        const region=document.createElement('button');region.type='button';region.className='cord-hotspot';region.setAttribute('aria-label','Examiner le fermoir rouge de l’enveloppe');region.addEventListener('click',openSheet);$('modalVisual').append(region);
+        addModalButton('Défaire le fermoir',openSheet);
+      } else if(kind==='faded'){
+        $('modalTitle').textContent='Feuillet de Safir';modalImage(fadedImage,'Document ancien dont plusieurs mots sont visibles : Je déclare, Noël, Rubis, douceur, Car, même Noël. Les autres inscriptions sont très pâles.');
+        $('modalDescription').textContent='Des mots apparaissent par endroits, mais impossible de lire le texte entier.';
+        addModalButton('Prendre le feuillet',()=>{state.documentSelected=true;state.stringSelected=false;save();closeModal();paint(true);say('Feuillet en main. Où pourrais-tu mieux le lire ?','FEUILLET');});
+        addModalButton('Ranger pour plus tard',closeModal,true);
+      } else if(kind==='revealed'){
+        $('modalTitle').textContent='Déclaration révélée';modalImage(revealedImage,'Déclaration de Safir révélée par transparence : Je déclare souhaiter un Noël paisible pour notre foyer. J’aimerais le passer avec Rubis, entouré de mes humains, de douceur, de bisous, de ficelles et de moments à observer les oiseaux. Car chacun peut avoir ses envies pour un même Noël.');
+        $('modalDescription').textContent='La lumière traverse le papier : les mots apparaissent enfin !';
+        addModalButton('Classer la déclaration',()=>{state.complete=true;save();notifyParent('complete');closeModal();paint();say('Archive S récupérée ! Safir aura au moins contribué à l’enquête… sans le vouloir.','ARCHIVE VALIDÉE');});
+      }
+      $('modalClose').focus();
+    }
+    let openingSheet=false;
+    async function openSheet(){
+      if(openingSheet)return;openingSheet=true;
+      const visual=$('modalVisual');visual.classList.add('modal-untie');
+      $('modalDescription').textContent='Le cordon se défait…';
+      await sleep(reducedMotion?40:590);
+      visual.classList.remove('modal-untie');
+      state.envelopeOpen=true;state.hintLevel=0;save();paint();openModal('faded');
+      /* Le feuillet est déjà affiché dans la fenêtre. */
+      openingSheet=false;
+    }
+    function closeModal(){modalKind=null;$('modalLayer').hidden=true;if(previousFocus&&typeof previousFocus.focus==='function')previousFocus.focus();}
+
+    /* Les objets récupérés se sélectionnent par toucher OU se déplacent par glisser. */
+    function enableDrag(element,type,origin){
+      element.style.touchAction='none';
+      element.addEventListener('pointerdown',e=>{
+        if(e.button!==0||animating||!$('modalLayer').hidden)return;
+        drag={pointerId:e.pointerId,type,origin,source:element,x0:e.clientX,y0:e.clientY,lastX:e.clientX,lastY:e.clientY,moving:false,ghost:null};
+        try{element.setPointerCapture(e.pointerId);}catch(err){}
+      });
+      element.addEventListener('pointermove',e=>{
+        if(!drag||drag.pointerId!==e.pointerId||drag.source!==element)return;
+        drag.lastX=e.clientX;drag.lastY=e.clientY;
+        if(!drag.moving&&Math.hypot(e.clientX-drag.x0,e.clientY-drag.y0)>9){
+          drag.moving=true;const ghost=document.createElement('div');ghost.className='drag-ghost';
+          ghost.textContent=type==='document'?'📜 Feuillet':type==='string'?'🧶 Ficelle':'✉ Enveloppe';
+          document.body.append(ghost);drag.ghost=ghost;element.classList.add('drag-source');
+        }
+        if(drag.moving){
+          drag.ghost.style.left=e.clientX+'px';drag.ghost.style.top=e.clientY+'px';
+          document.querySelectorAll('.hotspot.drop-target').forEach(b=>b.classList.remove('drop-target'));
+          const beneath=document.elementFromPoint(e.clientX,e.clientY);
+          const target=beneath?.closest?.('.hotspot');
+          if(target)target.classList.add('drop-target');
+        }
+      });
+      element.addEventListener('pointerup',e=>{
+        if(!drag||drag.pointerId!==e.pointerId||drag.source!==element)return;
+        const d=drag;drag=null;document.querySelectorAll('.hotspot.drop-target').forEach(b=>b.classList.remove('drop-target'));
+        if(d.ghost)d.ghost.remove();element.classList.remove('drag-source');
+        if(!d.moving)return;
+        suppressedClicks.set(element,true);
+        const beneath=document.elementFromPoint(e.clientX,e.clientY);const target=beneath?.closest?.('.hotspot');
+        if(d.origin==='scene'&&type==='string'){
+          state.stringTaken=true;state.stringSelected=false;save();paint(true);
+          if(target)useItem('string',target.dataset.object);
+          else say('Tu as récupéré un bout de ficelle. Il est dans ton inventaire.','FICELLE');
+        } else if(d.origin==='scene'&&type==='envelope'){
+          if(state.windowOpen&&!state.hasEnvelope){action('envelope',e);}else action('envelope',e);
+        } else if(target)useItem(type,target.dataset.object);
+        else say('L’objet est toujours dans l’inventaire.','INVENTAIRE');
+      });
+      element.addEventListener('pointercancel',()=>{if(!drag||drag.source!==element)return;if(drag.ghost)drag.ghost.remove();element.classList.remove('drag-source');drag=null;});
+    }
+    document.querySelectorAll('.hotspot').forEach(b=>{
+      b.addEventListener('click',e=>{
+        if(suppressedClicks.get(b)){suppressedClicks.delete(b);return;}
+        b.classList.remove('pressed');void b.offsetWidth;b.classList.add('pressed');setTimeout(()=>b.classList.remove('pressed'),440);
+        action(b.dataset.object,e);
+      });
+    });
+    ['string','envelope'].forEach(type=>{
+      const el=document.querySelector('[data-object="'+type+'"]');enableDrag(el,type,'scene');
+    });
+    $('zonesButton').addEventListener('click',()=>{zones=!zones;$('sceneWrap').classList.toggle('showzones',zones);$('zonesButton').setAttribute('aria-pressed',String(zones));say(zones?'Zones d’interaction affichées. Essaie de toucher les objets.':'Zones masquées. Les objets restent interactifs.','AIDE');});
+    $('hintButton').addEventListener('click',()=>{state.hintLevel=Math.min(2,state.hintLevel+1);save();paint();say(hintForStage(),'INDICE');});
+    $('resetButton').addEventListener('click',()=>{$('resetLayer').hidden=false;$('resetCancel').focus();});
+    $('resetCancel').addEventListener('click',()=>{$('resetLayer').hidden=true;$('resetButton').focus();});
+    $('resetConfirm').addEventListener('click',()=>{
+      state=blank();try{localStorage.removeItem(KEY);}catch(e){}notifyParent('reset');$('resetLayer').hidden=true;
+      $('shuttersVfx').classList.remove('open');$('shuttersVfx').hidden=true;
+       zones=false;$('sceneWrap').classList.remove('showzones');$('zonesButton').setAttribute('aria-pressed','false');
+      $('sceneFullOverlay').hidden=true;$('sceneWindowOverlay').classList.remove('opening');$('sceneWindowOverlay').hidden=true;$('sceneFlash').classList.remove('active');
+      animating=false;$('sceneWrap').classList.remove('busy');paint();say('Une grande enveloppe est coincée sous Safir.','NOUVELLE PARTIE');$('resetButton').focus();
+    });
+    $('modalClose').addEventListener('click',closeModal);
+    $('modalLayer').addEventListener('click',e=>{if(e.target===$('modalLayer'))closeModal();});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('modalLayer').hidden)closeModal();else if(!$('resetLayer').hidden)$('resetCancel').click();}if(e.key==='Tab'&&!$('modalLayer').hidden){const focusable=[...$('modalLayer').querySelectorAll('button:not([disabled])')];let i=focusable.indexOf(document.activeElement);if(e.shiftKey&&i===0){e.preventDefault();focusable.at(-1).focus();}else if(!e.shiftKey&&i===focusable.length-1){e.preventDefault();focusable[0].focus();}}});
+    // Préchargement pour éviter tout clignotement au passage d'un état visuel à l'autre.
+    [scenePaths[1],scenePaths[2],envelopeImage,fadedImage,revealedImage].forEach(src=>{const im=new Image();im.src=src;});
+    function notifyParent(status){
+      if(window.parent===window)return;
+      try{window.parent.postMessage({type:'bdn-j24-safir',status:status},window.location.origin);}catch(e){}
+    }
+    paint();
+    if(state.complete)notifyParent('complete');
+    if(state.complete)say('Cette épreuve a déjà été terminée sur ce navigateur. Tu peux examiner la déclaration depuis l’inventaire ou recommencer.','PARTIE REPRISE');
+  })();
+  </script>
+</body>
+</html>
