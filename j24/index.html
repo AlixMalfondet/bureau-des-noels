@@ -50,6 +50,27 @@ label{display:block;font-weight:700;margin-bottom:8px}
 .archive-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:15px 0 19px}
 .archive{min-height:153px;display:flex;flex-direction:column;gap:7px;padding:13px 10px;background:linear-gradient(145deg,#3b4e3a,#263a2d);border:1px solid #b19d72;border-radius:7px}
 .archive b{font:700 28px Georgia,serif;color:var(--gold)}.archive strong{color:#f0dcad;font-size:14px}.archive small{font-size:12px;color:#e0e0d1;line-height:1.36}.archive span{margin-top:auto;color:#d9c9a6;font-size:11px}
+.archive-action{width:100%;min-height:155px;text-align:left;font-weight:400;cursor:pointer}
+.archive-action:hover{filter:brightness(1.13)}
+.archive-action.recovered{border-color:#9cdaac;background:linear-gradient(145deg,#345c3c,#2c4935)}
+.archive-action.recovered span{color:#b4edc1;font-weight:750}
+.archive-result{background:#274935;border:1px solid #78a981;border-radius:10px;padding:13px;margin:9px 0 16px}
+.archive-result p{font-size:13px;margin:0 0 10px}
+.archive-result button{font-size:13px;padding:9px;min-height:42px}
+.archive-seal{display:block;color:#a8e1ae;font-size:12px;letter-spacing:.07em;margin-top:12px;font-weight:750}
+.safir-layer{position:fixed;inset:0;z-index:8;background:#102019;display:flex;flex-direction:column}
+.safir-layer[hidden]{display:none}
+.safir-topbar{flex:0 0 auto;min-height:61px;padding:8px max(11px,env(safe-area-inset-right)) 8px max(11px,env(safe-area-inset-left));background:#182f24;border-bottom:1px solid #647759;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.safir-topbar button{font-size:13px;padding:9px 12px;min-height:40px}
+.safir-topbar strong{font-size:12px;color:#e5ca93;text-align:right}
+.safir-frame{border:0;width:100%;height:100%;flex:1;background:#0d1712}
+body.in-safir{overflow:hidden}
+.doc-bg{position:fixed;inset:0;z-index:11;background:#000d;display:grid;place-items:center;padding:12px}
+.doc-bg[hidden]{display:none}
+.doc-modal{width:min(100%,720px);max-height:calc(100dvh - 24px);overflow-y:auto;background:#243b2c;border:1px solid #bca676;border-radius:12px;padding:14px}
+.doc-modal .toolbar{position:sticky;top:-14px;background:#243b2c;padding:8px 0;z-index:1}
+.doc-modal img{display:block;width:100%;height:auto;max-height:70dvh;object-fit:contain;background:#1a2c20;border-radius:6px;border:1px solid #667154}
+.doc-modal p{font-size:13px;color:#d5ddcf}
 details.services{border:1px solid #718069;border-radius:10px;background:#233b2e;padding:0 13px;margin:19px 0}
 details.services summary{padding:15px 2px;color:var(--gold);font-weight:700;cursor:pointer}
 .service-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding-bottom:15px}
@@ -116,12 +137,16 @@ footer{padding:17px 15px;text-align:center;font-size:12px;color:#b8c5b7;border-t
 <section id="dashboard" hidden>
 <div class="toolbar"><span class="status ok">Dossier ouvert</span><button id="restartDashboard" type="button" class="tertiary">Recommencer</button></div>
 <div class="eyebrow">Commission · BN-2026-F024</div><h2>Les pièces de l'enquête</h2>
-<div class="paper"><div class="stamp-warning">CLÔTURE SUSPENDUE</div><h3>Deux déclarations. Une seule célébration.</h3><p>Le registre est complet, mais les documents d'origine doivent encore être examinés avant toute décision.</p></div>
+<div class="paper"><div class="stamp-warning">CLÔTURE SUSPENDUE</div><h3>Deux déclarations. Une seule célébration.</h3><p>Le registre est complet, mais les documents d'origine doivent encore être examinés avant toute décision.</p><span id="safirDossierSeal" class="archive-seal" hidden>✓ ARCHIVE S AUTHENTIFIÉE · 1 / 2 RÉCUPÉRÉE</span></div>
 <div class="eyebrow">Archives confidentielles</div>
 <p>Deux traces distinctes subsistent dans les locaux du Bureau. Retrouver les pièces originales permettra d'établir leur provenance.</p>
 <div class="archive-grid" aria-label="Deux pistes d'archives">
-<div class="archive"><b>I</b><strong>Dossier sous surveillance</strong><small>Une pièce conservée au Bureau</small><span>Sous scellés · montage en cours</span></div>
+<button type="button" class="archive archive-action" id="startSafir"><b>I</b><strong>Dossier sous surveillance</strong><small>Une pièce conservée au Bureau</small><span id="safirFlag">Examiner cette archive</span></button>
 <div class="archive"><b>II</b><strong>Transfert non confirmé</strong><small>Une piste interrompue au tri</small><span>Sous scellés · montage en cours</span></div>
+</div>
+<div id="safirRecoveredPanel" class="archive-result" hidden>
+  <p><strong>Archive S versée au dossier.</strong> Le feuillet original est désormais disponible à la consultation.</p>
+  <button type="button" id="viewSafirDeclaration" class="secondary full">📜 Examiner la déclaration récupérée</button>
 </div>
 <details class="services"><summary>Consulter les autres services du Bureau</summary>
 <div class="service-grid">
@@ -143,6 +168,17 @@ footer{padding:17px 15px;text-align:center;font-size:12px;color:#b8c5b7;border-t
 </main>
 <footer>Bureau des Noëls · Commission de clôture · 24 décembre</footer>
 </div>
+<div id="safirLayer" class="safir-layer" hidden role="region" aria-label="Investigation dans le bureau de Safir">
+  <div class="safir-topbar"><button id="leaveSafir" type="button" class="secondary">← Retour au dossier</button><strong id="safirTopStatus">ARCHIVE S · ENQUÊTE EN COURS</strong></div>
+  <iframe id="safirFrame" class="safir-frame" title="Épreuve interactive : retrouver la déclaration de Safir" loading="lazy"></iframe>
+</div>
+<div id="safirDocLayer" class="doc-bg" hidden>
+  <div class="doc-modal" role="dialog" aria-modal="true" aria-labelledby="safirDocTitle">
+    <div class="toolbar"><h2 id="safirDocTitle">Déclaration retrouvée</h2><button id="closeSafirDoc" class="secondary" type="button">Fermer ✕</button></div>
+    <img src="test-safir/assets/safir-declaration-revelee.webp" width="1536" height="864" alt="Déclaration de Safir : il souhaite un Noël paisible pour le foyer, avec Rubis et ses humains, de la douceur, des bisous, des ficelles et des oiseaux." loading="lazy">
+    <p>Original authentifié · Archive S · Dossier BN-2026-F024. L'annexe relative aux conditions essentielles reste scellée en attente du rapprochement des deux déclarations.</p>
+  </div>
+</div>
 <div id="resetDialog" class="modal-bg" hidden>
 <div class="modal" role="dialog" aria-modal="true" aria-labelledby="resetTitle"><h2 id="resetTitle">Recommencer la procédure ?</h2>
 <p>Seule la progression du J24 sera effacée sur ce navigateur. L'aventure du J14 ne sera pas modifiée.</p>
@@ -151,7 +187,7 @@ footer{padding:17px 15px;text-align:center;font-size:12px;color:#b8c5b7;border-t
 <script>
 (function(){
 "use strict";
-const KEY="bdn_2026_j24_v2",VALID="F024";
+const KEY="bdn_2026_j24_v2",SAFIR_KEY="bdn_2026_j24_safir_v1",VALID="F024";
 const SCREENS=["login","discovery","resume","dashboard","module"];
 const MODULES=["archives","expeditions","conformite","reglementation"];
 const $=id=>document.getElementById(id);
@@ -161,13 +197,57 @@ const DATA={
  conformite:{title:"Service de conformité",tag:"Contrôle · Rapport",html:'<div class="paper"><h3>Contrôle précédent</h3><p>Le contrôle de conformité du foyer a été effectué.</p><p class="small muted">L’attestation remise à la fin de l’investigation précédente reste à conserver.</p></div>'},
  reglementation:{title:"Service de réglementation",tag:"Textes · Procédures",html:'<div class="paper"><h3>Règlement applicable</h3><p>Le règlement original a été remis lors de la première intervention au foyer.</p><p>Il constitue le texte de référence pour une éventuelle contestation d’une décision de clôture.</p></div><p class="small muted">Le document papier fait foi.</p>'}
 };
-const fresh=()=>({version:2,authenticated:false,folderOpened:false,visited:[]});
+const fresh=()=>({version:2,authenticated:false,folderOpened:false,visited:[],safirRecovered:false});
 let state=fresh(),storage=true,previousFocus=null;
-try{localStorage.setItem("bdn_j24_ping","1");localStorage.removeItem("bdn_j24_ping");let raw=localStorage.getItem(KEY);if(raw){let p=JSON.parse(raw);if(p&&p.version===2&&typeof p.authenticated==="boolean"&&Array.isArray(p.visited)){state={version:2,authenticated:p.authenticated,folderOpened:p.folderOpened===true,visited:MODULES.filter(k=>p.visited.includes(k))};}}}
+try{localStorage.setItem("bdn_j24_ping","1");localStorage.removeItem("bdn_j24_ping");let raw=localStorage.getItem(KEY);if(raw){let p=JSON.parse(raw);if(p&&p.version===2&&typeof p.authenticated==="boolean"&&Array.isArray(p.visited)){state={version:2,authenticated:p.authenticated,folderOpened:p.folderOpened===true,visited:MODULES.filter(k=>p.visited.includes(k)),safirRecovered:p.safirRecovered===true};}}}
 catch(e){storage=false;$("storageNotice").hidden=false;}
 function save(){if(!storage)return;try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){storage=false;$("storageNotice").hidden=false;}}
-function show(id){SCREENS.forEach(s=>$(s).hidden=s!==id);window.scrollTo(0,0);if(id==="discovery")renderFolder();if(id==="dashboard")renderFlags();}
+function show(id){SCREENS.forEach(s=>$(s).hidden=s!==id);window.scrollTo(0,0);if(id==="discovery")renderFolder();if(id==="dashboard"){renderFlags();renderSafir();}}
 function renderFolder(){const opened=state.folderOpened;$("openFolder").classList.toggle("opened",opened);$("openFolder").disabled=opened;$("openFolder").setAttribute("aria-expanded",String(opened));$("reveal").hidden=!opened;$("folderPrompt").textContent=opened?"Pièces accessibles":"Touchez la chemise pour l'ouvrir.";}
+function renderSafir(){
+ const recovered=state.safirRecovered;
+ $("startSafir").classList.toggle("recovered",recovered);
+ $("safirFlag").textContent=recovered?"✓ Archive S authentifiée · Revenir au bureau":"Examiner cette archive";
+ $("safirRecoveredPanel").hidden=!recovered;
+ $("safirDossierSeal").hidden=!recovered;
+ $("safirTopStatus").textContent=recovered?"✓ ARCHIVE S RÉCUPÉRÉE":"ARCHIVE S · ENQUÊTE EN COURS";
+}
+function markSafir(recovered){
+ if(!state.authenticated)return;
+ state.safirRecovered=recovered;
+ save();renderSafir();
+}
+function enterSafir(){
+ if(!state.authenticated||!state.folderOpened)return;
+ $("safirLayer").hidden=false;
+ document.body.classList.add("in-safir");
+ if(!$("safirFrame").getAttribute("src"))$("safirFrame").src="safir/";
+ renderSafir();
+}
+function exitSafir(){
+ $("safirLayer").hidden=true;
+ document.body.classList.remove("in-safir");
+ show("dashboard");
+}
+$("startSafir").addEventListener("click",enterSafir);
+$("leaveSafir").addEventListener("click",exitSafir);
+window.addEventListener("message",e=>{
+ if(e.origin!==window.location.origin||e.source!==$("safirFrame").contentWindow)return;
+ if(!e.data||e.data.type!=="bdn-j24-safir")return;
+ if(e.data.status==="complete")markSafir(true);
+ if(e.data.status==="reset")markSafir(false);
+});
+$("viewSafirDeclaration").addEventListener("click",()=>{
+ if(!state.safirRecovered)return;
+ $("safirDocLayer").hidden=false;
+ $("closeSafirDoc").focus();
+});
+$("closeSafirDoc").addEventListener("click",()=>{$("safirDocLayer").hidden=true;$("viewSafirDeclaration").focus();});
+$("safirDocLayer").addEventListener("click",e=>{if(e.target===$("safirDocLayer"))$("closeSafirDoc").click();});
+$("safirDocLayer").addEventListener("keydown",e=>{
+ if(e.key==="Escape"){e.preventDefault();$("closeSafirDoc").click();}
+ if(e.key==="Tab"){const a=[$("closeSafirDoc")];if(a.length===1){e.preventDefault();a[0].focus();}}
+});
 function renderFlags(){MODULES.forEach(k=>{const el=document.querySelector('[data-flag="'+k+'"]');if(el)el.textContent=state.visited.includes(k)?"✓ Consulté":"À consulter";});}
 $("loginForm").addEventListener("submit",e=>{e.preventDefault();const code=$("suffix").value.trim().toUpperCase().replace(/\s/g,"");if(code!==VALID){$("loginError").textContent="Référence inconnue. Vérifiez le document officiel remis à votre foyer.";$("suffix").focus();return;}$("loginError").textContent="";state.authenticated=true;save();show("discovery");});
 $("suffix").addEventListener("input",()=>{$("loginError").textContent="";});
@@ -183,7 +263,11 @@ function closeReset(){$("resetDialog").hidden=true;if(previousFocus&&typeof prev
 $("resetCancel").addEventListener("click",closeReset);
 $("resetDialog").addEventListener("click",e=>{if(e.target===$("resetDialog"))closeReset();});
 $("resetDialog").addEventListener("keydown",e=>{if(e.key==="Escape"){e.preventDefault();closeReset();}if(e.key==="Tab"){const a=[$("resetConfirm"),$("resetCancel")],i=a.indexOf(document.activeElement);if(!e.shiftKey&&i===1){e.preventDefault();a[0].focus();}else if(e.shiftKey&&i===0){e.preventDefault();a[1].focus();}}});
-$("resetConfirm").addEventListener("click",()=>{closeReset();state=fresh();if(storage)try{localStorage.removeItem(KEY);}catch(e){storage=false;$("storageNotice").hidden=false;}$("suffix").value="";$("loginError").textContent="";$("hint").hidden=true;$("hintBtn").setAttribute("aria-expanded","false");show("login");});
+$("resetConfirm").addEventListener("click",()=>{closeReset();state=fresh();if(storage)try{localStorage.removeItem(KEY);localStorage.removeItem(SAFIR_KEY);}catch(e){storage=false;$("storageNotice").hidden=false;}$("safirFrame").removeAttribute("src");$("safirLayer").hidden=true;$("safirDocLayer").hidden=true;document.body.classList.remove("in-safir");renderSafir();$("suffix").value="";$("loginError").textContent="";$("hint").hidden=true;$("hintBtn").setAttribute("aria-expanded","false");show("login");});
+try{
+ const game=JSON.parse(localStorage.getItem(SAFIR_KEY)||"null");
+ if(game&&game.version===1&&game.complete===true&&state.authenticated&&!state.safirRecovered){state.safirRecovered=true;save();}
+}catch(e){}
 show(state.authenticated?"resume":"login");
 })();
 </script>
