@@ -1,328 +1,191 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#152820">
-  <meta name="robots" content="noindex,nofollow">
-  <title>Bureau des Noëls — Commission de clôture (J24)</title>
-  <style>
-    :root{color-scheme:dark;--bg:#101e19;--panel:#172a22;--panel2:#223b2e;--ink:#e8eee5;--muted:#b5c8b9;--gold:#e7ca8d;--border:#6d7557;--ok:#a7e3b2;--danger:#ffc3b5}
-    *{box-sizing:border-box}
-    [hidden]{display:none!important}
-    html{scroll-behavior:smooth}
-    body{margin:0;min-height:100vh;padding:clamp(12px,3vw,28px) 14px 38px;background:radial-gradient(ellipse at 50% -10%,#32533b 0%,#172d23 48%,#0c1713 100%);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
-    .shell{width:min(100%,620px);margin:0 auto;background:linear-gradient(160deg,#1b3026,var(--panel));border:1px solid var(--border);border-radius:19px;box-shadow:0 20px 65px #0006;overflow:hidden}
-    header{padding:26px 24px 20px;text-align:center;border-bottom:1px solid #4c604d}
-    .seal{width:64px;height:64px;margin:0 auto 8px;display:block}
-    .eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700}
-    h1,h2,h3{font-family:Georgia,"Times New Roman",serif;font-weight:600;line-height:1.23;color:var(--gold)}
-    h1{margin:5px 0;font-size:clamp(26px,6vw,33px)}
-    h2{font-size:25px;margin:6px 0 15px}
-    h3{font-size:19px;margin:7px 0}
-    p{margin:10px 0 14px}
-    main{padding:24px;min-height:380px}
-    .subtle,.muted{color:var(--muted)}
-    .small{font-size:13px}
-    .fine{font-size:12px}
-    .notice,.paper{border:1px solid #607255;background:var(--panel2);border-radius:11px;padding:15px;margin:15px 0}
-    .paper{border-left:4px solid var(--gold)}
-    .notice.warn{border-color:#a07863;background:#42332e}
-    .notice.ok{border-color:#609873;background:#203c2d}
-    .notice p:last-child,.paper p:last-child{margin-bottom:0}
-    .status{display:inline-flex;align-items:center;gap:7px;color:var(--gold);text-transform:uppercase;font-size:11px;letter-spacing:.06em;font-weight:800}
-    .status:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--gold)}
-    .status.ok{color:var(--ok)} .status.ok:before{background:var(--ok)}
-    label{display:block;margin:14px 0 8px;font-weight:600}
-    .reference{display:flex;align-items:stretch;gap:8px}
-    .prefix{display:flex;align-items:center;white-space:nowrap;color:var(--gold);font-size:19px;font-weight:800}
-    input{min-width:0;width:100%;padding:12px 10px;border:1px solid #ad996a;border-radius:9px;background:#101f19;color:white;font:700 23px/1.3 ui-monospace,Consolas,monospace;text-transform:uppercase;letter-spacing:.15em;text-align:center}
-    input:focus-visible,button:focus-visible{outline:3px solid #f2d79c;outline-offset:3px}
-    button{font:inherit;cursor:pointer;border-radius:9px;padding:12px 14px;min-height:45px;border:1px solid transparent;background:var(--gold);color:#15261d;font-weight:750;transition:background .15s ease,transform .15s ease}
-    button:hover:not(:disabled){filter:brightness(1.07)}
-    button:active:not(:disabled){transform:translateY(1px)}
-    button:disabled{cursor:not-allowed;opacity:.58}
-    button.secondary{color:var(--gold);background:transparent;border:1px solid #8e845f}
-    button.tertiary{color:var(--muted);background:transparent;border:1px solid #50624f}
-    button.danger{color:#fff0e9;background:#853e35;border-color:#b3756a}
-    button.full{display:block;width:100%}
-    button + button{margin-top:10px}
-    .error{color:var(--danger);font-size:14px;min-height:21px}
-    .muted-link{border:0;background:none;color:var(--muted);padding:8px 0;min-height:0;text-decoration:underline;text-underline-offset:3px;font-weight:500}
-    .center{text-align:center}
-    .hint{margin-top:12px;color:var(--gold);font-size:14px}
-    .progress-row{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:var(--muted);margin:15px 0 7px}
-    .progress-track{height:7px;background:#465648;border-radius:99px;overflow:hidden}
-    .progress-fill{height:100%;width:0%;background:var(--gold);transition:width .25s ease}
-    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0}
-    .tile{background:var(--panel2);border:1px solid #627458;min-height:142px;width:100%;padding:15px;text-align:left;display:flex;flex-direction:column;gap:7px;color:var(--ink)}
-    .tile:hover:not(:disabled){background:#2b4a39}
-    .tile strong{color:#f1dfb4;font-size:16px}
-    .tile small{color:var(--muted);font-size:12px;line-height:1.35}
-    .tile .icon{font-size:26px;line-height:1}
-    .tile .flag{margin-top:auto;align-self:flex-start;font-size:11px;color:var(--ok)}
-    .tile.locked{border-style:dashed}
-    .tile.locked .flag{color:var(--muted)}
-    .toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:18px}
-    .toolbar button{width:auto}
-    .code{font:600 13px ui-monospace,Consolas,monospace;letter-spacing:.03em;color:var(--gold)}
-    .divider{height:1px;background:#465c4b;margin:20px 0}
-    .archive-list{padding-left:20px}
-    .archive-list li{margin:9px 0}
-    footer{text-align:center;font-size:12px;color:#a8bcae;padding:17px 20px 22px;border-top:1px solid #465c4b}
-    .modal-backdrop{position:fixed;inset:0;background:#000b;display:grid;place-items:center;padding:16px;z-index:10}
-    .modal{width:min(100%,450px);background:#20372a;border:1px solid #d8be82;border-radius:13px;box-shadow:0 15px 55px #000a;padding:24px}
-    .modal h2{font-size:22px}
-    #storageWarning{margin:0 24px 12px}
-    @media(max-width:410px){main{padding:18px}header{padding:22px 16px 18px}.tile{min-height:140px;padding:12px}.tile strong{font-size:14px}.prefix{font-size:16px}.grid{gap:9px}}
-    @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#172b21">
+<meta name="robots" content="noindex,nofollow">
+<title>Bureau des Noëls — Commission de clôture</title>
+<style>
+:root{color-scheme:dark;--bg:#102019;--panel:#1b3226;--panel2:#284234;--gold:#e5ca93;--ink:#f0f0e5;--muted:#c0cdbb;--stroke:#788060;--red:#e5af9c}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;min-height:100svh;padding:16px 12px 30px;background:radial-gradient(ellipse at 50% 0,#34563e 0,#182f24 45%,#101b16 100%);color:var(--ink);font:16px/1.53 system-ui,-apple-system,"Segoe UI",sans-serif}
+.shell{max-width:620px;margin:auto;background:var(--panel);border:1px solid var(--stroke);border-radius:16px;overflow:hidden;box-shadow:0 12px 40px #0005}
+header{text-align:center;padding:23px 18px 20px;border-bottom:1px solid #536a54}
+.seal{width:63px;height:63px;display:block;margin:auto auto 9px}
+header .overline,.eyebrow{font-size:11px;font-weight:750;letter-spacing:.13em;text-transform:uppercase;color:var(--gold)}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;color:var(--gold);line-height:1.2;font-weight:600}
+h1{font-size:31px;margin:6px 0}h2{font-size:25px;margin:8px 0 15px}h3{font-size:19px;margin:8px 0}
+p{margin:10px 0 14px}main{padding:23px;min-height:360px}.muted{color:var(--muted)}.small{font-size:13px}
+.status{color:var(--gold);font-size:11px;letter-spacing:.08em;font-weight:800;text-transform:uppercase}
+.status::before{content:"";display:inline-block;width:8px;height:8px;background:var(--gold);border-radius:50%;margin-right:8px}
+.status.ok{color:#b4edc1}.status.ok::before{background:#b4edc1}
+.paper,.notice{padding:15px;margin:15px 0;border-radius:10px;background:var(--panel2);border:1px solid #6b795f}.paper{border-left:4px solid var(--gold)}.paper p:last-child{margin-bottom:0}
+button,input{font:inherit}button{cursor:pointer;min-height:45px;padding:12px 13px;border:1px solid #d5bd85;border-radius:9px;background:var(--gold);color:#15281d;font-weight:750;transition:filter .15s,transform .15s}
+button:hover:not(:disabled){filter:brightness(1.07)}button:active:not(:disabled){transform:translateY(1px)}button:disabled{opacity:.55;cursor:not-allowed}
+button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #ffdc92;outline-offset:3px}
+button.full{display:block;width:100%}button.secondary{color:var(--gold);border-color:#9c906b;background:transparent}button.tertiary{color:var(--muted);background:transparent;border-color:#516b55;padding:7px 10px;font-size:12px;min-height:38px}
+button+button{margin-top:9px}
+label{display:block;font-weight:700;margin-bottom:8px}
+.reference{display:flex;align-items:center;gap:7px}.prefix{font:700 clamp(16px,4vw,20px) ui-monospace,monospace;color:var(--gold)}
+.reference input{min-width:0;width:100%;border:1px solid #ab9969;border-radius:8px;padding:10px;color:#fff;text-align:center;background:#13241c;font:800 23px ui-monospace,monospace;letter-spacing:.15em;text-transform:uppercase}
+.note{font-size:12px;color:var(--muted)}.error{color:#ffd0c2;font-size:14px;min-height:22px}
+.linklike{background:none;border:0;text-decoration:underline;text-underline-offset:3px;color:var(--muted);font-weight:500;min-height:34px;padding:5px}.center{text-align:center}
+.memo{display:flex;gap:12px;padding:13px;background:#223c2e;border:1px solid #677b61;border-radius:10px;margin:18px 0}.memo .emoji{font-size:27px}.memo p{font-size:13px;color:var(--muted);margin:4px 0 0}
+.stage{border:1px solid #6c7f61;border-radius:13px;background:radial-gradient(ellipse at center,#405341,#20372b);padding:24px 12px;text-align:center;overflow:hidden}
+.folder{margin:40px auto 16px;position:relative;width:min(100%,290px);height:188px;min-height:0;border:0;background:transparent;padding:0;box-shadow:none}
+.folder:hover:not(:disabled){filter:none;transform:none}.folder::before{content:"";position:absolute;inset:23px 10px 0;background:#a98d57;border-radius:9px;box-shadow:0 14px 28px #0008}
+.sheet{position:absolute;z-index:1;inset:9px 31px 18px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:7px;background:#eee3c5;border:1px solid #b09a73;border-radius:4px;color:#4f4839;transition:transform .65s ease}
+.sheet strong{font:700 19px Georgia,serif}.sheet small{font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.cover{position:absolute;z-index:2;inset:49px 9px 0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:9px;background:linear-gradient(150deg,#dbc78f,#b49964);color:#433821;border:1px solid #e6d5aa;border-radius:8px;transition:transform .65s ease}
+.cover small{font-size:11px}.cover strong{font:700 20px Georgia,serif}
+.tab{position:absolute;top:-21px;left:8px;width:117px;height:24px;background:#ccb37b;border:1px solid #e6d5aa;border-bottom:0;border-radius:9px 9px 0 0}
+.stamp{display:inline-block;border:2px solid #765144;color:#765144;padding:2px 9px;transform:rotate(-7deg);font:800 12px system-ui}
+.folder.opened .sheet{transform:translateY(-42px)}.folder.opened .cover{transform:translateY(22px)}.prompt{color:#efd9ad;font-size:13px}
+.reveal{border-top:1px solid #657561;margin-top:18px;padding-top:16px;animation:slideIn .45s ease both}
+@keyframes slideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.stats{display:flex;gap:11px;margin:12px 0}.stats>div{flex:1;background:#e6d8b8;border-radius:4px;padding:9px;color:#463f32}.stats b{font:700 29px Georgia,serif;display:block}.stats span{font-size:11px;text-transform:uppercase}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}
+.stamp-warning{display:inline-block;border:2px solid #d4a08a;color:#ecbda9;transform:rotate(-3deg);font-size:11px;font-weight:800;letter-spacing:.06em;padding:3px 9px}
+.archive-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:15px 0 19px}
+.archive{min-height:153px;display:flex;flex-direction:column;gap:7px;padding:13px 10px;background:linear-gradient(145deg,#3b4e3a,#263a2d);border:1px solid #b19d72;border-radius:7px}
+.archive b{font:700 28px Georgia,serif;color:var(--gold)}.archive strong{color:#f0dcad;font-size:14px}.archive small{font-size:12px;color:#e0e0d1;line-height:1.36}.archive span{margin-top:auto;color:#d9c9a6;font-size:11px}
+details.services{border:1px solid #718069;border-radius:10px;background:#233b2e;padding:0 13px;margin:19px 0}
+details.services summary{padding:15px 2px;color:var(--gold);font-weight:700;cursor:pointer}
+.service-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding-bottom:15px}
+.service{width:100%;min-height:110px;text-align:left;background:#2c4837;border:1px solid #718568;color:var(--ink);display:flex;flex-direction:column;gap:7px;padding:12px}
+.service strong{font-size:14px;color:var(--gold)}.service small{color:#d8dfce;font-size:12px;line-height:1.4}.service .flag{font-size:11px;color:#ace4b8;margin-top:auto}
+.service.locked{border-style:dashed}
+footer{padding:17px 15px;text-align:center;font-size:12px;color:#b8c5b7;border-top:1px solid #536a54}
+.modal-bg{position:fixed;inset:0;background:#000b;z-index:10;display:grid;place-items:center;padding:16px}
+.modal{max-width:445px;background:#21392c;border:1px solid var(--gold);border-radius:12px;padding:22px}
+#storageNotice{margin:10px 22px 0;color:#ffdfca}
+@media(max-width:410px){body{padding:9px 7px 25px}main{padding:17px}header{padding:20px 14px}.archive{padding:11px 9px}.archive strong{font-size:13px}.archive small{font-size:11px}.folder{width:min(100%,275px)}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
 </head>
 <body>
-  <div class="shell">
-    <header>
-      <svg class="seal" viewBox="0 0 80 80" role="img" aria-label="Sceau du Bureau des Noëls">
-        <circle cx="40" cy="40" r="36" fill="none" stroke="#dcc18c" stroke-width="2"/>
-        <circle cx="40" cy="40" r="30" fill="none" stroke="#9c946f" stroke-width="1" stroke-dasharray="2 4"/>
-        <path d="M40 13 24 35h9L20 53h15v12h10V53h15L47 35h9L40 13Z" fill="#dcc18c"/>
-        <circle cx="40" cy="42" r="3" fill="#183126"/>
-      </svg>
-      <div class="eyebrow">Administration magique • Noël 2026</div>
-      <h1>Bureau des Noëls</h1>
-      <div class="subtle small">Commission de clôture des déclarations</div>
-    </header>
-
-    <p id="storageWarning" class="notice warn small" hidden role="alert">La sauvegarde locale n'est pas disponible dans ce navigateur. La partie risque de recommencer après fermeture. Essaie un onglet normal, hors navigation privée.</p>
-
-    <main>
-      <section id="screenLogin">
-        <span class="status">Dossier sous contrôle</span>
-        <h2>Accès aux archives</h2>
-        <p>Inspectrice, votre foyer est concerné par une anomalie de clôture. Pour consulter le dossier, complétez sa référence administrative.</p>
-        <div class="paper">
-          <div class="eyebrow">Service d'identification</div>
-          <form id="loginForm" novalidate>
-            <label for="suffix">Référence du foyer</label>
-            <div class="reference">
-              <span class="prefix" aria-hidden="true">BN-2026-</span>
-              <input id="suffix" name="suffix" aria-label="Quatre derniers caractères de la référence du foyer" maxlength="4" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="____" required>
-            </div>
-            <p id="loginError" class="error" role="status" aria-live="polite"></p>
-            <button class="full" type="submit">Accéder au dossier</button>
-          </form>
-        </div>
-        <div class="center"><button id="hintButton" class="muted-link" type="button" aria-expanded="false">Besoin d'un indice ?</button></div>
-        <p id="loginHint" class="hint center" hidden>La référence a été communiquée lors de la correction de l'adresse du foyer. Consulte le document conservé du 11 décembre.</p>
-      </section>
-
-      <section id="screenResume" hidden>
-        <span class="status ok">Session retrouvée</span>
-        <h2>Une procédure est déjà en cours</h2>
-        <p>Une consultation précédente a été sauvegardée sur ce navigateur.</p>
-        <div class="paper">
-          <div class="eyebrow">Dossier en cours</div>
-          <h3>BN-2026-F024</h3>
-          <div class="progress-row"><span>Rubriques consultées</span><strong id="resumeCount">0 / 4</strong></div>
-          <div class="progress-track" aria-hidden="true"><div id="resumeBar" class="progress-fill"></div></div>
-          <p class="small muted">La progression de l'enquête finale sera ajoutée ici au fur et à mesure de la conception des énigmes.</p>
-        </div>
-        <button id="resumeButton" class="full">Reprendre mon dossier</button>
-        <button id="resetFromResume" class="secondary full">Recommencer depuis le début</button>
-      </section>
-
-      <section id="screenDashboard" hidden>
-        <div class="toolbar">
-          <span class="status ok">Foyer identifié</span>
-          <button id="resetFromDashboard" class="tertiary" type="button">Recommencer</button>
-        </div>
-        <div class="eyebrow">Référence BN-2026-F024</div>
-        <h2>Tableau de bord</h2>
-        <p>Deux déclarations concernent votre foyer. Consultez les services du Bureau pour examiner le dossier.</p>
-        <div class="progress-row"><span>Rubriques consultées</span><strong id="dashboardCount">0 / 4</strong></div>
-        <div class="progress-track" aria-hidden="true"><div id="dashboardBar" class="progress-fill"></div></div>
-        <div class="grid" aria-label="Services administratifs">
-          <button type="button" class="tile" data-section="archives"><span class="icon" aria-hidden="true">📁</span><strong>Archives</strong><small>Déclarations déposées</small><span class="flag" data-flag="archives">À consulter</span></button>
-          <button type="button" class="tile" data-section="expeditions"><span class="icon" aria-hidden="true">📦</span><strong>Expéditions</strong><small>Livraisons et tirages</small><span class="flag" data-flag="expeditions">À consulter</span></button>
-          <button type="button" class="tile" data-section="conformite"><span class="icon" aria-hidden="true">✓</span><strong>Conformité</strong><small>Contrôle du foyer</small><span class="flag" data-flag="conformite">À consulter</span></button>
-          <button type="button" class="tile" data-section="reglementation"><span class="icon" aria-hidden="true">§</span><strong>Réglementation</strong><small>Textes officiels</small><span class="flag" data-flag="reglementation">À consulter</span></button>
-          <button type="button" class="tile locked" disabled title="Ouverture prévue lors de l'intégration des énigmes"><span class="icon" aria-hidden="true">🔒</span><strong>Annexes privées</strong><small>Accès sous scellés</small><span class="flag">Verrouillé</span></button>
-          <button type="button" class="tile locked" disabled title="Ouverture prévue lors de l'intégration des énigmes"><span class="icon" aria-hidden="true">🗂️</span><strong>Clôture</strong><small>Décision définitive</small><span class="flag">Indisponible</span></button>
-        </div>
-        <div class="notice small">Version de test : l'identification, la navigation et la sauvegarde sont actives. Les deux énigmes confidentielles et la fusion seront intégrées après validation de leur gameplay.</div>
-      </section>
-
-      <section id="screenModule" hidden>
-        <div class="toolbar">
-          <button id="backToDashboard" class="secondary" type="button">← Tableau de bord</button>
-          <span class="code">BN-2026-F024</span>
-        </div>
-        <div class="eyebrow" id="moduleEyebrow">Service du Bureau</div>
-        <h2 id="moduleTitle"></h2>
-        <div id="moduleBody"></div>
-        <div class="divider"></div>
-        <button id="backBottom" class="secondary full" type="button">Retour aux services</button>
-      </section>
-    </main>
-    <footer>Bureau des Noëls · Service des archives · J24<br>Prototype de l'interface — Aucun autre épisode modifié</footer>
-  </div>
-
-  <div id="resetDialog" class="modal-backdrop" hidden>
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="resetTitle" aria-describedby="resetDescription">
-      <div class="eyebrow">Confirmation requise</div>
-      <h2 id="resetTitle">Recommencer la procédure ?</h2>
-      <p id="resetDescription">Cette action efface seulement la progression du <strong>24 décembre sur ce navigateur</strong>. Le J14, le J20 et les autres appareils ne seront pas affectés.</p>
-      <button id="confirmReset" class="danger full" type="button">Oui, effacer ma progression J24</button>
-      <button id="cancelReset" class="secondary full" type="button">Annuler</button>
-    </div>
-  </div>
-
-  <script>
-  (function () {
-    "use strict";
-    const STORAGE_KEY = "bdn_2026_j24_v1";
-    const VALID_SUFFIX = "F024";
-    const MODULES = ["archives","expeditions","conformite","reglementation"];
-    const $ = (id) => document.getElementById(id);
-    const SCREENS = ["screenLogin","screenResume","screenDashboard","screenModule"];
-    const MODULE_DATA = {
-      archives: {
-        title:"Service des archives", eyebrow:"Déclarations • Registres",
-        html:'<span class="status">Deux dépôts recensés</span><div class="paper"><h3>Registre du foyer</h3><p>Deux déclarations distinctes ont été enregistrées pour le Noël 2026 du même foyer.</p><p class="muted small">L’origine de chaque déclaration sera accessible après l’intégration des enquêtes confidentielles.</p></div><div class="notice small">État de ce module : consultation disponible. Les mécanismes d’identification des déclarants sont encore en préparation.</div>'
-      },
-      expeditions: {
-        title:"Service des expéditions", eyebrow:"Livraisons • Traçabilité",
-        html:'<span class="status ok">Livraisons régularisées</span><div class="paper"><h3>Historique des tirages</h3><ul class="archive-list"><li>Premier tirage : décoration livrée le 15 décembre.</li><li>Deuxième tirage : livraison régularisée le 20 décembre.</li></ul><p>Les deux tirages concernent le même foyer et le Noël 2026.</p></div><p class="muted small">Le bordereau physique du 20 décembre reste la pièce justificative officielle.</p>'
-      },
-      conformite: {
-        title:"Service de conformité", eyebrow:"Contrôles • Rapport",
-        html:'<span class="status ok">Foyer conforme</span><div class="paper"><h3>Attestation du contrôle précédent</h3><p>Le contrôle de conformité est terminé. Les observations confirment des conditions favorables au confort, aux câlins, aux jeux et aux surprises.</p><p>Les observations ne justifient aucune séparation des occupants du foyer.</p></div><p class="muted small">Conservez l’attestation remise lors du contrôle du Bureau.</p>'
-      },
-      reglementation: {
-        title:"Service de réglementation", eyebrow:"Textes • Procédures",
-        html:'<span class="status">Consultation des textes</span><div class="paper"><h3>Règlement applicable au foyer</h3><p>Le règlement officiel a été remis lors de l’identification initiale du foyer.</p><p>Il constitue le texte de référence pour toute décision de clôture administrative.</p></div><p class="muted small">Le texte original sur papier fait foi. Certaines procédures ne seront proposées qu’après instruction des archives.</p>'
-      }
-    };
-
-    let storageOK = true;
-    let state = freshState();
-    let currentScreen = "screenLogin";
-    let previousFocus = null;
-
-    function freshState(){return {version:1,authenticated:false,visited:[],lastSection:null,updatedAt:null};}
-    function checkStorage(){
-      try{localStorage.setItem("bdn_2026_j24_storage_test","1");localStorage.removeItem("bdn_2026_j24_storage_test");return true;}
-      catch(e){return false;}
-    }
-    function load(){
-      if(!storageOK)return freshState();
-      try{
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if(!raw)return freshState();
-        const parsed = JSON.parse(raw);
-        if(!parsed || parsed.version!==1 || typeof parsed.authenticated!=="boolean" || !Array.isArray(parsed.visited))return freshState();
-        return {
-          version:1,authenticated:parsed.authenticated,
-          visited:MODULES.filter(x=>parsed.visited.includes(x)),
-          lastSection:MODULES.includes(parsed.lastSection)?parsed.lastSection:null,
-          updatedAt:typeof parsed.updatedAt==="number"?parsed.updatedAt:null
-        };
-      }catch(e){return freshState();}
-    }
-    function save(){
-      state.updatedAt=Date.now();
-      if(!storageOK)return;
-      try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}
-      catch(e){storageOK=false;$("storageWarning").hidden=false;}
-    }
-    function showScreen(name){
-      currentScreen=name;
-      SCREENS.forEach(id=>$(id).hidden=(id!==name));
-      window.scrollTo({top:0,behavior:"auto"});
-      if(name==="screenDashboard" || name==="screenResume")updateProgress();
-      if(name==="screenLogin"){$("suffix").value="";$("loginError").textContent="";$("loginHint").hidden=true;$("hintButton").setAttribute("aria-expanded","false");}
-    }
-    function updateProgress(){
-      const count=state.visited.length;
-      ["resumeCount","dashboardCount"].forEach(id=>$(id).textContent=count+" / 4");
-      ["resumeBar","dashboardBar"].forEach(id=>$(id).style.width=(25*count)+"%");
-      MODULES.forEach(key=>{
-        const flag=document.querySelector('[data-flag="'+key+'"]');
-        if(flag)flag.textContent=state.visited.includes(key)?"✓ Consulté":"À consulter";
-      });
-    }
-    function openModule(key){
-      if(!state.authenticated||!Object.prototype.hasOwnProperty.call(MODULE_DATA,key))return;
-      if(!state.visited.includes(key))state.visited.push(key);
-      state.lastSection=key;
-      save();
-      const data=MODULE_DATA[key];
-      $("moduleEyebrow").textContent=data.eyebrow;
-      $("moduleTitle").textContent=data.title;
-      $("moduleBody").innerHTML=data.html;
-      showScreen("screenModule");
-    }
-    function openReset(){
-      previousFocus=document.activeElement;
-      $("resetDialog").hidden=false;
-      $("cancelReset").focus();
-      document.addEventListener("keydown",modalKey);
-    }
-    function closeReset(){
-      $("resetDialog").hidden=true;
-      document.removeEventListener("keydown",modalKey);
-      if(previousFocus && typeof previousFocus.focus==="function")previousFocus.focus();
-      previousFocus=null;
-    }
-    function modalKey(event){
-      if(event.key==="Escape"){event.preventDefault();closeReset();}
-      if(event.key==="Tab"){
-        const elements=[$("confirmReset"),$("cancelReset")];
-        const current=elements.indexOf(document.activeElement);
-        if(event.shiftKey && current===0){event.preventDefault();elements[1].focus();}
-        if(!event.shiftKey && current===1){event.preventDefault();elements[0].focus();}
-      }
-    }
-    function reset(){
-      closeReset();
-      state=freshState();
-      if(storageOK){
-        try{localStorage.removeItem(STORAGE_KEY);}catch(e){storageOK=false;$("storageWarning").hidden=false;}
-      }
-      showScreen("screenLogin");
-      $("suffix").focus();
-    }
-
-    $("loginForm").addEventListener("submit",function(event){
-      event.preventDefault();
-      const suffix=$("suffix").value.trim().toUpperCase().replace(/\s/g,"");
-      if(suffix!==VALID_SUFFIX){
-        $("loginError").textContent="Référence inconnue. Vérifiez le document officiel remis à votre foyer.";
-        $("suffix").focus();
-        return;
-      }
-      $("loginError").textContent="";
-      state.authenticated=true;
-      save();
-      showScreen("screenDashboard");
-    });
-    $("suffix").addEventListener("input",()=>{$("loginError").textContent="";});
-    $("hintButton").addEventListener("click",()=>{
-      $("loginHint").hidden=!$("loginHint").hidden;
-      $("hintButton").setAttribute("aria-expanded",String(!$("loginHint").hidden));
-    });
-    $("resumeButton").addEventListener("click",()=>showScreen("screenDashboard"));
-    ["resetFromResume","resetFromDashboard"].forEach(id=>$(id).addEventListener("click",openReset));
-    $("confirmReset").addEventListener("click",reset);
-    $("cancelReset").addEventListener("click",closeReset);
-    $("resetDialog").addEventListener("click",(event)=>{if(event.target===$("resetDialog"))closeReset();});
-    document.querySelectorAll("[data-section]").forEach(button=>button.addEventListener("click",()=>openModule(button.getAttribute("data-section"))));
-    ["backToDashboard","backBottom"].forEach(id=>$(id).addEventListener("click",()=>showScreen("screenDashboard")));
-
-    storageOK=checkStorage();
-    $("storageWarning").hidden=storageOK;
-    state=load();
-    showScreen(state.authenticated?"screenResume":"screenLogin");
-  })();
-  </script>
+<div class="shell">
+<header>
+<svg class="seal" viewBox="0 0 80 80" role="img" aria-label="Sceau du Bureau des Noëls"><circle cx="40" cy="40" r="36" stroke="#e1c98d" fill="none" stroke-width="2"/><circle cx="40" cy="40" r="30" stroke="#a99a70" fill="none" stroke-width="1" stroke-dasharray="2 4"/><path d="M40 11 25 36h9L20 53h15v12h10V53h15L46 36h9L40 11Z" fill="#e1c98d"/><circle cx="40" cy="42" r="3" fill="#21392c"/></svg>
+<div class="overline">Administration magique · Noël 2026</div>
+<h1>Bureau des Noëls</h1>
+<div class="muted small">Commission de clôture des déclarations</div>
+</header>
+<p id="storageNotice" class="small" role="alert" hidden>Ce navigateur ne permet pas de sauvegarder la progression. Utilisez un onglet normal pour conserver votre dossier.</p>
+<main>
+<section id="login">
+<span class="status">Convocation · 24 décembre</span>
+<h2>Ouverture de la Commission</h2>
+<p>La clôture de votre Noël est suspendue. Une dernière investigation a été demandée pour votre foyer.</p>
+<div class="memo"><span class="emoji" aria-hidden="true">✉️</span><div><strong>Identification nécessaire</strong><p>Complétez la référence administrative qui figure dans vos pièces d'enquête.</p></div></div>
+<div class="paper">
+<div class="eyebrow">Guichet d'identification</div>
+<form id="loginForm" novalidate>
+<label for="suffix">Référence du foyer</label>
+<div class="reference"><span class="prefix" aria-hidden="true">BN-2026-</span><input id="suffix" name="suffix" maxlength="4" placeholder="____" aria-label="Quatre derniers caractères de la référence du foyer" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" required></div>
+<p class="note">Quatre caractères sont attendus.</p><p id="loginError" class="error" role="status" aria-live="polite"></p>
+<button class="full" type="submit">Identifier le foyer</button>
+</form>
+</div>
+<div class="center"><button id="hintBtn" type="button" class="linklike" aria-expanded="false" aria-controls="hint">Besoin d'un indice ?</button><p id="hint" hidden class="small">La référence figure dans le dossier reçu lors de la première intervention du Bureau, le 11 décembre.</p></div>
+</section>
+<section id="discovery" hidden>
+<span class="status ok">Référence reconnue</span><h2>Le dossier vous attend</h2>
+<p>La Commission a mis à votre disposition une chemise conservée sous scellés. Son contenu n'a pas encore été examiné.</p>
+<div class="stage">
+<div class="eyebrow">Table de consultation · Commission de clôture</div>
+<button id="openFolder" class="folder" type="button" aria-controls="reveal" aria-expanded="false" aria-label="Ouvrir la chemise confidentielle">
+<span class="sheet" aria-hidden="true"><small>Pièces de clôture</small><strong>Deux dépôts</strong><small>Un seul Noël</small></span>
+<span class="cover" aria-hidden="true"><span class="tab"></span><small>Bureau des Noëls</small><strong>BN-2026-F024</strong><span class="stamp">CONFIDENTIEL</span></span>
+</button>
+<p id="folderPrompt" class="prompt">Touchez la chemise pour l'ouvrir.</p>
+<div id="reveal" class="reveal" hidden>
+<div class="stats"><div><b>2</b><span>Déclarations</span></div><div><b>1</b><span>Noël concerné</span></div></div>
+<p>Les deux dépôts sont enregistrés pour le même foyer. Les pièces originales n'ont pas encore été rapprochées.</p>
+<button id="toDashboard" class="full" type="button">Examiner les pièces du dossier</button>
+</div>
+</div>
+</section>
+<section id="resume" hidden>
+<span class="status ok">Dossier retrouvé</span><h2>La Commission vous reconnaît</h2>
+<p>Une investigation est déjà ouverte sur ce navigateur.</p>
+<div class="paper"><div class="eyebrow">Dossier en cours</div><h3>BN-2026-F024</h3><p class="small muted">Votre progression a été conservée. Vous pouvez reprendre l'examen ou recommencer.</p></div>
+<button id="resumeBtn" class="full" type="button">Reprendre l'investigation</button><button id="restartResume" class="secondary full" type="button">Recommencer depuis le début</button>
+</section>
+<section id="dashboard" hidden>
+<div class="toolbar"><span class="status ok">Dossier ouvert</span><button id="restartDashboard" type="button" class="tertiary">Recommencer</button></div>
+<div class="eyebrow">Commission · BN-2026-F024</div><h2>Les pièces de l'enquête</h2>
+<div class="paper"><div class="stamp-warning">CLÔTURE SUSPENDUE</div><h3>Deux déclarations. Une seule célébration.</h3><p>Le registre est complet, mais les documents d'origine doivent encore être examinés avant toute décision.</p></div>
+<div class="eyebrow">Archives confidentielles</div>
+<p>Deux traces distinctes subsistent dans les locaux du Bureau. Retrouver les pièces originales permettra d'établir leur provenance.</p>
+<div class="archive-grid" aria-label="Deux pistes d'archives">
+<div class="archive"><b>I</b><strong>Dossier sous surveillance</strong><small>Une pièce conservée au Bureau</small><span>Sous scellés · montage en cours</span></div>
+<div class="archive"><b>II</b><strong>Transfert non confirmé</strong><small>Une piste interrompue au tri</small><span>Sous scellés · montage en cours</span></div>
+</div>
+<details class="services"><summary>Consulter les autres services du Bureau</summary>
+<div class="service-grid">
+<button type="button" class="service" data-module="archives"><strong>📁 Registre</strong><small>Déclarations déposées</small><span class="flag" data-flag="archives">À consulter</span></button>
+<button type="button" class="service" data-module="expeditions"><strong>📦 Expéditions</strong><small>Livraisons et tirages</small><span class="flag" data-flag="expeditions">À consulter</span></button>
+<button type="button" class="service" data-module="conformite"><strong>✓ Conformité</strong><small>Contrôle du foyer</small><span class="flag" data-flag="conformite">À consulter</span></button>
+<button type="button" class="service" data-module="reglementation"><strong>§ Réglementation</strong><small>Textes de procédure</small><span class="flag" data-flag="reglementation">À consulter</span></button>
+<div class="service locked"><strong>🔒 Annexes privées</strong><small>Accès réservé à la Commission</small><span class="flag">Sous scellés</span></div>
+<div class="service locked"><strong>🗂️ Clôture</strong><small>Décision en attente</small><span class="flag">Suspendue</span></div>
+</div>
+</details>
+<p class="small muted">Version de préparation : les deux enquêtes confidentielles et le dénouement seront intégrés après leurs tests.</p>
+</section>
+<section id="module" hidden>
+<div class="toolbar"><button id="moduleBack" type="button" class="secondary">← Archives</button><span class="eyebrow">BN-2026-F024</span></div>
+<div class="eyebrow" id="moduleEyebrow"></div><h2 id="moduleTitle"></h2><div id="moduleBody"></div>
+<button id="moduleBackBottom" type="button" class="secondary full">Retour aux archives</button>
+</section>
+</main>
+<footer>Bureau des Noëls · Commission de clôture · 24 décembre</footer>
+</div>
+<div id="resetDialog" class="modal-bg" hidden>
+<div class="modal" role="dialog" aria-modal="true" aria-labelledby="resetTitle"><h2 id="resetTitle">Recommencer la procédure ?</h2>
+<p>Seule la progression du J24 sera effacée sur ce navigateur. L'aventure du J14 ne sera pas modifiée.</p>
+<button id="resetConfirm" type="button" class="full">Oui, recommencer le J24</button><button id="resetCancel" type="button" class="secondary full">Annuler</button></div>
+</div>
+<script>
+(function(){
+"use strict";
+const KEY="bdn_2026_j24_v2",VALID="F024";
+const SCREENS=["login","discovery","resume","dashboard","module"];
+const MODULES=["archives","expeditions","conformite","reglementation"];
+const $=id=>document.getElementById(id);
+const DATA={
+ archives:{title:"Service des archives",tag:"Déclarations · Registres",html:'<div class="paper"><h3>Registre du foyer</h3><p>Deux déclarations distinctes sont enregistrées pour le Noël 2026 du même foyer.</p><p class="small muted">La provenance des deux originaux reste à confirmer.</p></div>'},
+ expeditions:{title:"Service des expéditions",tag:"Livraisons · Traçabilité",html:'<div class="paper"><h3>Historique des tirages</h3><p>Premier tirage : décoration livrée le 15 décembre.</p><p>Deuxième tirage : livraison régularisée le 20 décembre.</p><p>Les deux tirages concernent le même foyer et le même Noël.</p></div><p class="small muted">Le bordereau papier remis le 20 décembre fait foi.</p>'},
+ conformite:{title:"Service de conformité",tag:"Contrôle · Rapport",html:'<div class="paper"><h3>Contrôle précédent</h3><p>Le contrôle de conformité du foyer a été effectué.</p><p class="small muted">L’attestation remise à la fin de l’investigation précédente reste à conserver.</p></div>'},
+ reglementation:{title:"Service de réglementation",tag:"Textes · Procédures",html:'<div class="paper"><h3>Règlement applicable</h3><p>Le règlement original a été remis lors de la première intervention au foyer.</p><p>Il constitue le texte de référence pour une éventuelle contestation d’une décision de clôture.</p></div><p class="small muted">Le document papier fait foi.</p>'}
+};
+const fresh=()=>({version:2,authenticated:false,folderOpened:false,visited:[]});
+let state=fresh(),storage=true,previousFocus=null;
+try{localStorage.setItem("bdn_j24_ping","1");localStorage.removeItem("bdn_j24_ping");let raw=localStorage.getItem(KEY);if(raw){let p=JSON.parse(raw);if(p&&p.version===2&&typeof p.authenticated==="boolean"&&Array.isArray(p.visited)){state={version:2,authenticated:p.authenticated,folderOpened:p.folderOpened===true,visited:MODULES.filter(k=>p.visited.includes(k))};}}}
+catch(e){storage=false;$("storageNotice").hidden=false;}
+function save(){if(!storage)return;try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){storage=false;$("storageNotice").hidden=false;}}
+function show(id){SCREENS.forEach(s=>$(s).hidden=s!==id);window.scrollTo(0,0);if(id==="discovery")renderFolder();if(id==="dashboard")renderFlags();}
+function renderFolder(){const opened=state.folderOpened;$("openFolder").classList.toggle("opened",opened);$("openFolder").disabled=opened;$("openFolder").setAttribute("aria-expanded",String(opened));$("reveal").hidden=!opened;$("folderPrompt").textContent=opened?"Pièces accessibles":"Touchez la chemise pour l'ouvrir.";}
+function renderFlags(){MODULES.forEach(k=>{const el=document.querySelector('[data-flag="'+k+'"]');if(el)el.textContent=state.visited.includes(k)?"✓ Consulté":"À consulter";});}
+$("loginForm").addEventListener("submit",e=>{e.preventDefault();const code=$("suffix").value.trim().toUpperCase().replace(/\s/g,"");if(code!==VALID){$("loginError").textContent="Référence inconnue. Vérifiez le document officiel remis à votre foyer.";$("suffix").focus();return;}$("loginError").textContent="";state.authenticated=true;save();show("discovery");});
+$("suffix").addEventListener("input",()=>{$("loginError").textContent="";});
+$("hintBtn").addEventListener("click",()=>{$("hint").hidden=!$("hint").hidden;$("hintBtn").setAttribute("aria-expanded",String(!$("hint").hidden));});
+$("openFolder").addEventListener("click",()=>{if(!state.authenticated||state.folderOpened)return;state.folderOpened=true;save();renderFolder();});
+$("toDashboard").addEventListener("click",()=>{if(state.authenticated&&state.folderOpened)show("dashboard");});
+$("resumeBtn").addEventListener("click",()=>show(state.folderOpened?"dashboard":"discovery"));
+document.querySelectorAll("[data-module]").forEach(b=>b.addEventListener("click",()=>{if(!state.authenticated)return;const k=b.dataset.module,d=DATA[k];if(!d)return;if(!state.visited.includes(k))state.visited.push(k);save();$("moduleEyebrow").textContent=d.tag;$("moduleTitle").textContent=d.title;$("moduleBody").innerHTML=d.html;show("module");}));
+["moduleBack","moduleBackBottom"].forEach(id=>$(id).addEventListener("click",()=>show("dashboard")));
+function openReset(){previousFocus=document.activeElement;$("resetDialog").hidden=false;$("resetCancel").focus();}
+function closeReset(){$("resetDialog").hidden=true;if(previousFocus&&typeof previousFocus.focus==="function")previousFocus.focus();previousFocus=null;}
+["restartResume","restartDashboard"].forEach(id=>$(id).addEventListener("click",openReset));
+$("resetCancel").addEventListener("click",closeReset);
+$("resetDialog").addEventListener("click",e=>{if(e.target===$("resetDialog"))closeReset();});
+$("resetDialog").addEventListener("keydown",e=>{if(e.key==="Escape"){e.preventDefault();closeReset();}if(e.key==="Tab"){const a=[$("resetConfirm"),$("resetCancel")],i=a.indexOf(document.activeElement);if(!e.shiftKey&&i===1){e.preventDefault();a[0].focus();}else if(e.shiftKey&&i===0){e.preventDefault();a[1].focus();}}});
+$("resetConfirm").addEventListener("click",()=>{closeReset();state=fresh();if(storage)try{localStorage.removeItem(KEY);}catch(e){storage=false;$("storageNotice").hidden=false;}$("suffix").value="";$("loginError").textContent="";$("hint").hidden=true;$("hintBtn").setAttribute("aria-expanded","false");show("login");});
+show(state.authenticated?"resume":"login");
+})();
+</script>
 </body>
 </html>
